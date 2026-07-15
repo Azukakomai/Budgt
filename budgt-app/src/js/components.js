@@ -32,17 +32,13 @@ export function renderNav() {
     const route = navItem.dataset.route;
     Router.navigate('#' + route);
 
-    // Update icons
+    // Update active state (color change via CSS, icon stays the same)
     nav.querySelectorAll('.nav-item').forEach(ni => {
       const r = ni.dataset.route;
-      const conf = items.find(i => i.route === r);
-      const icon = ni.querySelector('i');
       if (route === r) {
         ni.classList.add('active');
-        icon.className = conf.iconActive;
       } else {
         ni.classList.remove('active');
-        icon.className = conf.icon;
       }
     });
   });

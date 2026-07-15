@@ -71,23 +71,12 @@ export const Router = {
   },
 
   _updateNav(path) {
-    const iconMap = {
-      '/dashboard': { icon: 'ph ph-house', active: 'ph-fill ph-house-fill' },
-      '/transactions': { icon: 'ph ph-list-bullets', active: 'ph-fill ph-list-bullets-fill' },
-      '/budgets': { icon: 'ph ph-chart-pie', active: 'ph-fill ph-chart-pie-fill' },
-      '/accounts': { icon: 'ph ph-wallet', active: 'ph-fill ph-wallet-fill' },
-      '/more': { icon: 'ph ph-dots-three-circle', active: 'ph-fill ph-dots-three-circle-fill' },
-    };
     document.querySelectorAll('.nav-item').forEach(item => {
       const navPath = item.dataset.route;
-      const isActive = navPath && path.startsWith(navPath);
-      const iconEl = item.querySelector('i');
-      if (isActive) {
+      if (navPath && path.startsWith(navPath)) {
         item.classList.add('active');
-        if (iconEl && iconMap[navPath]) iconEl.className = iconMap[navPath].active;
       } else {
         item.classList.remove('active');
-        if (iconEl && iconMap[navPath]) iconEl.className = iconMap[navPath].icon;
       }
     });
   }
