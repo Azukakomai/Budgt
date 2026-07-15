@@ -1,0 +1,536 @@
+/* ════════════════════════════════════════════════════
+   BUDGT — View-Specific Styles
+   ════════════════════════════════════════════════════ */
+
+/* ─────────── Dashboard ─────────── */
+
+.dashboard-balance {
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  text-align: center;
+}
+
+.balance-label {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-1);
+}
+
+.balance-amount {
+  font-size: var(--text-display);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-tight);
+}
+
+.balance-change {
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
+  font-weight: var(--weight-medium);
+}
+
+.dashboard-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  padding: 0 var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.summary-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+}
+
+.summary-card-label {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.summary-card-amount {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-container {
+  padding: var(--space-4);
+}
+
+.chart-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.chart-card canvas {
+  width: 100%;
+  height: 200px;
+}
+
+/* ─────────── Transactions ─────────── */
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.transaction-item:active {
+  background: var(--bg-hover);
+}
+
+.transaction-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.transaction-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-desc {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transaction-category {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.transaction-amount {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.transaction-time {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-align: right;
+}
+
+/* ─────────── Accounts ─────────── */
+
+.account-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.account-card:active {
+  background: var(--bg-hover);
+}
+
+.account-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.account-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-name {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+}
+
+.account-type {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  text-transform: capitalize;
+}
+
+.account-balance {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.accounts-total {
+  padding: var(--space-4);
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+
+.accounts-total-label {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.accounts-total-amount {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────── Budgets ─────────── */
+
+.budget-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.budget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.budget-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-semibold);
+}
+
+.budget-amounts {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-spent {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+}
+
+.budget-total {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.budgets-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+/* ─────────── Piggy Banks ─────────── */
+
+.piggy-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.piggy-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.piggy-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.piggy-info {
+  flex: 1;
+}
+
+.piggy-name {
+  font-weight: var(--weight-semibold);
+}
+
+.piggy-target {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.piggy-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.piggy-current {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.piggy-percentage {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--accent);
+}
+
+.piggy-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.piggybanks-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+/* ─────────── Bills ─────────── */
+
+.bill-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.bill-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.bill-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bill-name {
+  font-weight: var(--weight-semibold);
+}
+
+.bill-meta {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.bill-trailing {
+  text-align: right;
+}
+
+.bill-amount {
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.bill-status {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.bill-status.paid {
+  color: var(--success);
+}
+.bill-status.due {
+  color: var(--warning);
+}
+.bill-status.overdue {
+  color: var(--danger);
+}
+
+.bills-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+/* ─────────── Reports ─────────── */
+
+.report-section {
+  padding: var(--space-4);
+}
+
+.report-chart {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.report-chart-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-3);
+}
+
+.report-chart canvas {
+  width: 100%;
+  height: 200px;
+}
+
+.report-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ─────────── Settings ─────────── */
+
+.settings-group {
+  padding: var(--space-4);
+}
+
+.settings-group-title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-bottom: var(--space-2);
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer;
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.settings-item-label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+}
+
+.settings-item-value {
+  font-size: var(--text-base);
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ─────────── Categories (grid) ─────────── */
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.category-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.category-card:active {
+  background: var(--bg-hover);
+}
+
+.category-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.category-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}

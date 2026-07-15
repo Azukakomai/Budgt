@@ -1,0 +1,125 @@
+/* ════════════════════════════════════════════════════
+   BUDGT — Design Tokens
+   OKLCH color system, spacing, typography, radii
+   ════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Background layers ── */
+  --bg-base: oklch(0.13 0.012 260);
+  --bg-surface: oklch(0.17 0.008 260);
+  --bg-elevated: oklch(0.21 0.008 260);
+  --bg-hover: oklch(0.24 0.008 260);
+  --bg-active: oklch(0.27 0.006 260);
+
+  /* ── Border ── */
+  --border-subtle: oklch(0.25 0.006 260);
+  --border-default: oklch(0.30 0.008 260);
+  --border-focus: var(--accent);
+
+  /* ── Accent — electric teal ── */
+  --accent: oklch(0.72 0.15 185);
+  --accent-hover: oklch(0.68 0.14 185);
+  --accent-muted: oklch(0.72 0.15 185 / 0.15);
+  --accent-subtle: oklch(0.72 0.15 185 / 0.08);
+
+  /* ── Semantic ── */
+  --income: oklch(0.72 0.14 155);
+  --income-muted: oklch(0.72 0.14 155 / 0.12);
+  --expense: oklch(0.70 0.13 25);
+  --expense-muted: oklch(0.70 0.13 25 / 0.12);
+  --transfer: oklch(0.68 0.10 280);
+  --transfer-muted: oklch(0.68 0.10 280 / 0.12);
+  --warning: oklch(0.78 0.14 80);
+  --warning-muted: oklch(0.78 0.14 80 / 0.12);
+  --danger: oklch(0.62 0.18 25);
+  --danger-muted: oklch(0.62 0.18 25 / 0.12);
+  --success: oklch(0.72 0.16 155);
+
+  /* ── Text ── */
+  --text-primary: oklch(0.93 0.005 260);
+  --text-secondary: oklch(0.60 0.01 260);
+  --text-tertiary: oklch(0.45 0.008 260);
+  --text-inverse: oklch(0.13 0.012 260);
+  --text-on-accent: oklch(0.13 0.012 260);
+
+  /* ── Typography ── */
+  --font-sans: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --text-xs: 0.6875rem;    /* 11px */
+  --text-sm: 0.75rem;      /* 12px */
+  --text-base: 0.875rem;   /* 14px */
+  --text-md: 1rem;          /* 16px */
+  --text-lg: 1.25rem;       /* 20px */
+  --text-xl: 1.5rem;        /* 24px */
+  --text-2xl: 1.75rem;      /* 28px */
+  --text-3xl: 2rem;          /* 32px */
+  --text-display: 2.5rem;   /* 40px */
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.45;
+  --leading-relaxed: 1.6;
+
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ── Spacing ── */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
+
+  /* ── Shadows (tinted, not pure black) ── */
+  --shadow-sm: 0 1px 2px oklch(0.05 0.01 260 / 0.5);
+  --shadow-md: 0 2px 8px oklch(0.05 0.01 260 / 0.4);
+  --shadow-lg: 0 8px 24px oklch(0.05 0.01 260 / 0.5);
+  --shadow-sheet: 0 -4px 32px oklch(0.05 0.01 260 / 0.6);
+
+  /* ── Transitions ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+
+  /* ── Z-index scale ── */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-fab: 20;
+  --z-nav: 30;
+  --z-header: 40;
+  --z-backdrop: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+
+  /* ── Safe areas ── */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* ── Layout ── */
+  --header-height: 56px;
+  --nav-height: 64px;
+  --content-max-width: 480px;
+}
