@@ -8,7 +8,7 @@ import { renderHeader, renderFab, showTransactionForm } from '../js/components.j
 import { renderDonutChart, renderSparkline } from '../js/charts.js';
 
 export function dashboardView(container) {
-  renderHeader('Budgt');
+  renderHeader(`<span style="display:inline-flex;align-items:center;gap:8px;">Budgt<svg width="12" height="10" viewBox="0 0 116 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><path d="M58 0L116 100H0L58 0Z" fill="#00E599"/></svg></span>`);
   renderFab(() => showTransactionForm());
 
   const render = () => {
@@ -31,9 +31,9 @@ export function dashboardView(container) {
         .filter(t => {
           const td = new Date(t.date);
           return t.type === 'withdrawal' &&
-                 td.getFullYear() === d.getFullYear() &&
-                 td.getMonth() === d.getMonth() &&
-                 td.getDate() === d.getDate();
+            td.getFullYear() === d.getFullYear() &&
+            td.getMonth() === d.getMonth() &&
+            td.getDate() === d.getDate();
         })
         .reduce((sum, t) => sum + t.amount, 0);
       last7Days.push(daySpending);
@@ -96,10 +96,10 @@ export function dashboardView(container) {
               <div class="empty-state-desc">No transactions yet</div>
             </div>
           ` : recentTransactions.map(tx => {
-            const cat = categories.find(c => c.id === tx.categoryId);
-            const isExpense = tx.type === 'withdrawal';
-            const isTransfer = tx.type === 'transfer';
-            return `
+      const cat = categories.find(c => c.id === tx.categoryId);
+      const isExpense = tx.type === 'withdrawal';
+      const isTransfer = tx.type === 'transfer';
+      return `
               <div class="transaction-item" data-id="${tx.id}">
                 <div class="transaction-icon" style="background: ${isTransfer ? 'var(--transfer-muted)' : isExpense ? 'var(--expense-muted)' : 'var(--income-muted)'}; color: ${isTransfer ? 'var(--transfer)' : isExpense ? 'var(--expense)' : 'var(--income)'}">
                   <i class="ph ${isTransfer ? 'ph-arrows-left-right' : cat?.icon || 'ph-receipt'}"></i>
@@ -116,7 +116,7 @@ export function dashboardView(container) {
                 </div>
               </div>
             `;
-          }).join('')}
+    }).join('')}
         </div>
       </div>
     `;

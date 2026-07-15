@@ -8,6 +8,7 @@ import { Store } from '../js/store.js';
 import { formatCurrency, formatDate, percentage, generateId, CATEGORY_COLORS } from '../js/utils.js';
 import { renderHeader, hideFab, showSheet, closeSheet, showToast } from '../js/components.js';
 import { renderBarChart, renderDonutChart } from '../js/charts.js';
+import { resetToZero } from '../js/seed.js';
 
 export function moreView(container) {
   renderHeader('More');
@@ -818,8 +819,9 @@ export function settingsView(container) {
         `;
         ctr.querySelector('#confirm-reset').addEventListener('click', () => {
           Store.clearAll();
+          resetToZero();
           closeSheet();
-          showToast('All data deleted. Reloading...', 'success');
+          showToast('All data deleted and reset to 0. Reloading...', 'success');
           setTimeout(() => window.location.reload(), 1000);
         });
         ctr.querySelector('#cancel-reset').addEventListener('click', () => closeSheet());

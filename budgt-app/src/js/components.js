@@ -11,11 +11,11 @@ export function renderNav() {
   if (!nav) return;
 
   const items = [
-    { route: '/dashboard',     icon: 'ph-house',        iconActive: 'ph-house-fill',        label: 'Home' },
-    { route: '/transactions',  icon: 'ph-list-bullets',  iconActive: 'ph-list-bullets-fill', label: 'Activity' },
-    { route: '/budgets',       icon: 'ph-chart-pie',    iconActive: 'ph-chart-pie-fill',    label: 'Budgets' },
-    { route: '/accounts',      icon: 'ph-wallet',       iconActive: 'ph-wallet-fill',       label: 'Accounts' },
-    { route: '/more',          icon: 'ph-dots-three-circle', iconActive: 'ph-dots-three-circle-fill', label: 'More' },
+    { route: '/dashboard',     icon: 'ph ph-house',              iconActive: 'ph-fill ph-house-fill',              label: 'Home' },
+    { route: '/transactions',  icon: 'ph ph-list-bullets',       iconActive: 'ph-fill ph-list-bullets-fill',       label: 'Activity' },
+    { route: '/budgets',       icon: 'ph ph-chart-pie',          iconActive: 'ph-fill ph-chart-pie-fill',          label: 'Budgets' },
+    { route: '/accounts',      icon: 'ph ph-wallet',             iconActive: 'ph-fill ph-wallet-fill',             label: 'Accounts' },
+    { route: '/more',          icon: 'ph ph-dots-three-circle',  iconActive: 'ph-fill ph-dots-three-circle-fill',  label: 'More' },
   ];
 
   nav.className = 'bottom-nav';

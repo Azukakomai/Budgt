@@ -95,3 +95,35 @@ export function seedData() {
   // Mark as seeded
   Store.set('seeded', true);
 }
+
+export function resetToZero() {
+  const now = new Date();
+  const categories = [
+    { id: 'cat_food',       name: 'Food & Dining',   icon: 'ph-fork-knife',       color: 'oklch(0.72 0.15 185)', type: 'expense' },
+    { id: 'cat_transport',  name: 'Transport',       icon: 'ph-car',              color: 'oklch(0.68 0.14 25)',  type: 'expense' },
+    { id: 'cat_housing',    name: 'Housing',         icon: 'ph-house',            color: 'oklch(0.70 0.12 280)', type: 'expense' },
+    { id: 'cat_entertain',  name: 'Entertainment',   icon: 'ph-film-strip',       color: 'oklch(0.78 0.14 80)', type: 'expense' },
+    { id: 'cat_shopping',   name: 'Shopping',        icon: 'ph-shopping-bag',     color: 'oklch(0.65 0.15 330)', type: 'expense' },
+    { id: 'cat_health',     name: 'Health',          icon: 'ph-heart',            color: 'oklch(0.68 0.12 215)', type: 'expense' },
+    { id: 'cat_utilities',  name: 'Utilities',       icon: 'ph-lightning',        color: 'oklch(0.75 0.13 110)', type: 'expense' },
+    { id: 'cat_groceries',  name: 'Groceries',       icon: 'ph-basket',           color: 'oklch(0.72 0.14 155)', type: 'expense' },
+    { id: 'cat_subs',       name: 'Subscriptions',   icon: 'ph-repeat',           color: 'oklch(0.62 0.14 350)', type: 'expense' },
+    { id: 'cat_education',  name: 'Education',       icon: 'ph-graduation-cap',   color: 'oklch(0.70 0.10 50)',  type: 'expense' },
+    { id: 'cat_salary',     name: 'Salary',          icon: 'ph-money',            color: 'oklch(0.72 0.14 155)', type: 'income' },
+    { id: 'cat_freelance',  name: 'Freelance',       icon: 'ph-briefcase',        color: 'oklch(0.68 0.12 215)', type: 'income' },
+  ];
+  Store.set('categories', categories);
+
+  const accounts = [
+    { id: 'acc_checking', name: 'Checking Account', type: 'asset', balance: 0, currency: 'USD', icon: 'ph-bank',       color: 'oklch(0.72 0.15 185)', createdAt: now.toISOString() },
+    { id: 'acc_savings',  name: 'Savings',          type: 'asset', balance: 0, currency: 'USD', icon: 'ph-piggy-bank', color: 'oklch(0.72 0.14 155)', createdAt: now.toISOString() },
+    { id: 'acc_cash',     name: 'Cash',             type: 'asset', balance: 0, currency: 'USD', icon: 'ph-wallet',     color: 'oklch(0.78 0.14 80)',  createdAt: now.toISOString() },
+  ];
+  Store.set('accounts', accounts);
+  Store.set('transactions', []);
+  Store.set('budgets', []);
+  Store.set('piggybanks', []);
+  Store.set('bills', []);
+  Store.set('settings', { currency: 'USD', locale: 'en-US', currencySymbol: '$' });
+  Store.set('seeded', true);
+}
