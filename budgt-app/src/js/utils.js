@@ -4,6 +4,7 @@
    ════════════════════════════════════════════════════ */
 
 import { State } from './state.js';
+import { t } from './i18n.js';
 
 // ── ID Generation ──
 export function generateId() {
@@ -15,9 +16,9 @@ export function formatCurrency(amount, opts = {}) {
   const settings = State.getSettings();
   const { showSign = false, compact = false } = opts;
 
-  const formatter = new Intl.NumberFormat(settings.locale, {
+  const formatter = new Intl.NumberFormat(settings.locale || 'en-US', {
     style: 'currency',
-    currency: settings.currency,
+    currency: settings.currency || 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     ...(compact && Math.abs(amount) >= 1000 ? { notation: 'compact' } : {})
@@ -32,14 +33,16 @@ export function formatCurrency(amount, opts = {}) {
 
 // ── Date Formatting ──
 export function formatDate(dateStr, format = 'short') {
+  const settings = State.getSettings();
+  const locale = settings.locale || 'en-US';
   const date = new Date(dateStr);
   const now = new Date();
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
 
   if (format === 'relative') {
-    if (isSameDay(date, now)) return 'Today';
-    if (isSameDay(date, yesterday)) return 'Yesterday';
+    if (isSameDay(date, now)) return t('Today');
+    if (isSameDay(date, yesterday)) return t('Yesterday');
   }
 
   const options = {
@@ -51,15 +54,18 @@ export function formatDate(dateStr, format = 'short') {
     dayMonth: { day: 'numeric', month: 'short' }
   };
 
-  return date.toLocaleDateString('en-US', options[format] || options.short);
+  return date.toLocaleDateString(locale, options[format] || options.short);
 }
 
 export function formatTime(dateStr) {
-  return new Date(dateStr).toLocaleTimeString('en-US', {
+  const settings = State.getSettings();
+  const locale = settings.locale || 'en-US';
+  return new Date(dateStr).toLocaleTimeString(locale, {
     hour: 'numeric',
     minute: '2-digit'
   });
 }
+
 
 export function isSameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&

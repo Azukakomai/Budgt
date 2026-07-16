@@ -176,14 +176,23 @@ export const State = {
 
   // ── Settings ──
   getSettings() {
-    return Store.get('settings') || {
-      currency: 'USD',
-      locale: 'en-US',
-      currencySymbol: '$'
+    const saved = Store.get('settings') || {};
+    return {
+      currency: saved.currency || 'USD',
+      locale: saved.locale || (saved.language === 'id' ? 'id-ID' : saved.language === 'ms' ? 'ms-MY' : 'en-US'),
+      currencySymbol: saved.currencySymbol || '$',
+      language: saved.language || 'en',
+      ...saved
     };
   },
   updateSettings(updates) {
-    const settings = { ...this.getSettings(), ...updates };
+    const current = this.getSettings();
+    const settings = { ...current, ...updates };
+    if (updates.language && !updates.locale) {
+      if (updates.language === 'id') settings.locale = 'id-ID';
+      else if (updates.language === 'ms') settings.locale = 'ms-MY';
+      else if (updates.language === 'en') settings.locale = 'en-US';
+    }
     Store.set('settings', settings);
     this.emit('settings', settings);
     return settings;

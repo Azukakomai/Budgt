@@ -6,6 +6,7 @@ import { State } from '../js/state.js';
 import { formatCurrency, formatDate, groupByDate, percentage, getMonthProgress } from '../js/utils.js';
 import { renderHeader, renderFab, showTransactionForm } from '../js/components.js';
 import { renderDonutChart, renderSparkline } from '../js/charts.js';
+import { t } from '../js/i18n.js';
 
 export function dashboardView(container) {
   renderHeader(`<span style="display:inline-flex;align-items:center;gap:8px;">Budgt<svg width="12" height="10" viewBox="0 0 116 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><path d="M58 0L116 100H0L58 0Z" fill="#00E599"/></svg></span>`);
@@ -41,10 +42,10 @@ export function dashboardView(container) {
 
     container.innerHTML = `
       <div class="dashboard-balance">
-        <div class="balance-label">Total Balance</div>
+        <div class="balance-label">${t('Total Balance')}</div>
         <div class="balance-amount">${formatCurrency(totalBalance)}</div>
         <div class="balance-change ${monthlyIncome - monthlySpending >= 0 ? 'amount-income' : 'amount-expense'}">
-          ${monthlyIncome - monthlySpending >= 0 ? '+' : ''}${formatCurrency(monthlyIncome - monthlySpending)} this month
+          ${monthlyIncome - monthlySpending >= 0 ? '+' : ''}${formatCurrency(monthlyIncome - monthlySpending)} ${t('this month')}
         </div>
       </div>
 
@@ -52,14 +53,14 @@ export function dashboardView(container) {
         <div class="summary-card">
           <div class="summary-card-label">
             <i class="ph ph-arrow-down" style="color: var(--income)"></i>
-            Income
+            ${t('Income')}
           </div>
           <div class="summary-card-amount amount-income">${formatCurrency(monthlyIncome)}</div>
         </div>
         <div class="summary-card">
           <div class="summary-card-label">
             <i class="ph ph-arrow-up" style="color: var(--expense)"></i>
-            Spending
+            ${t('Spending')}
           </div>
           <div class="summary-card-amount amount-expense">${formatCurrency(monthlySpending)}</div>
         </div>
@@ -68,7 +69,7 @@ export function dashboardView(container) {
       <div class="chart-container">
         <div class="chart-card">
           <div class="section-header">
-            <span class="section-title">Spending by Category</span>
+            <span class="section-title">${t('Spending by Category')}</span>
           </div>
           <canvas id="category-chart" style="width:100%;height:200px;"></canvas>
           <div class="report-legend" id="category-legend"></div>
@@ -78,7 +79,7 @@ export function dashboardView(container) {
       <div class="chart-container" style="padding-top:0;">
         <div class="chart-card">
           <div class="section-header">
-            <span class="section-title">Last 7 Days</span>
+            <span class="section-title">${t('Last 7 Days')}</span>
           </div>
           <canvas id="sparkline-chart" style="width:100%;height:80px;"></canvas>
         </div>
@@ -86,14 +87,14 @@ export function dashboardView(container) {
 
       <div class="section">
         <div class="section-header">
-          <span class="section-title">Recent Activity</span>
-          <button class="section-action" id="view-all-tx">View All</button>
+          <span class="section-title">${t('Recent Activity')}</span>
+          <button class="section-action" id="view-all-tx">${t('View All')}</button>
         </div>
         <div class="list" id="recent-list">
           ${recentTransactions.length === 0 ? `
             <div class="empty-state" style="padding: var(--space-6);">
               <i class="ph ph-receipt empty-state-icon" style="font-size:32px;"></i>
-              <div class="empty-state-desc">No transactions yet</div>
+              <div class="empty-state-desc">${t('No transactions yet')}</div>
             </div>
           ` : recentTransactions.map(tx => {
       const cat = categories.find(c => c.id === tx.categoryId);
@@ -106,7 +107,7 @@ export function dashboardView(container) {
                 </div>
                 <div class="transaction-info">
                   <div class="transaction-desc">${tx.description}</div>
-                  <div class="transaction-category">${isTransfer ? 'Transfer' : cat?.name || 'Uncategorized'}</div>
+                  <div class="transaction-category">${isTransfer ? t('Transfer') : (cat ? t(cat.name) : t('Uncategorized'))}</div>
                 </div>
                 <div class="list-item-trailing">
                   <div class="transaction-amount ${isExpense ? 'amount-expense' : isTransfer ? 'amount-transfer' : 'amount-income'}">
@@ -127,11 +128,11 @@ export function dashboardView(container) {
       const chartData = spendingByCategory.map(s => ({
         value: s.amount,
         color: s.color,
-        label: s.name
+        label: t(s.name)
       }));
       renderDonutChart(chartCanvas, chartData, {
         centerText: formatCurrency(monthlySpending, { compact: true }),
-        centerSubtext: 'This Month',
+        centerSubtext: t('This Month'),
         lineWidth: 20
       });
 
@@ -141,7 +142,7 @@ export function dashboardView(container) {
         legend.innerHTML = spendingByCategory.slice(0, 5).map(s => `
           <div class="legend-item">
             <div class="legend-dot" style="background: ${s.color}"></div>
-            <span>${s.name}</span>
+            <span>${t(s.name)}</span>
             <span style="color: var(--text-tertiary); margin-left: auto;">${formatCurrency(s.amount)}</span>
           </div>
         `).join('');

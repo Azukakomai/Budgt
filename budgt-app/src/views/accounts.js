@@ -5,10 +5,11 @@
 import { State } from '../js/state.js';
 import { formatCurrency, generateId, ACCOUNT_ICONS } from '../js/utils.js';
 import { renderHeader, hideFab, showSheet, closeSheet, showToast } from '../js/components.js';
+import { t } from '../js/i18n.js';
 
 export function accountsView(container) {
-  renderHeader('Accounts', [
-    { id: 'add-account-btn', icon: 'ph ph-plus', label: 'Add account', onClick: () => showAccountForm() }
+  renderHeader(t('Accounts'), [
+    { id: 'add-account-btn', icon: 'ph ph-plus', label: t('Add account'), onClick: () => showAccountForm() }
   ]);
   hideFab();
 
@@ -18,7 +19,7 @@ export function accountsView(container) {
 
     container.innerHTML = `
       <div class="accounts-total">
-        <div class="accounts-total-label">Net Worth</div>
+        <div class="accounts-total-label">${t('Net Worth')}</div>
         <div class="accounts-total-amount">${formatCurrency(totalBalance)}</div>
       </div>
 
@@ -26,8 +27,8 @@ export function accountsView(container) {
         ${accounts.length === 0 ? `
           <div class="empty-state">
             <i class="ph ph-wallet empty-state-icon"></i>
-            <div class="empty-state-title">No accounts</div>
-            <div class="empty-state-desc">Add your first account to start tracking</div>
+            <div class="empty-state-title">${t('No accounts')}</div>
+            <div class="empty-state-desc">${t('Add your first account to start tracking')}</div>
           </div>
         ` : accounts.map(acc => `
           <div class="account-card" data-id="${acc.id}">
@@ -68,23 +69,23 @@ function showAccountForm(existing = null) {
   const isEdit = !!existing;
 
   showSheet({
-    title: isEdit ? 'Edit Account' : 'New Account',
+    title: isEdit ? t('Edit Account') : t('New Account'),
     content: (container) => {
       container.innerHTML = `
         <div class="input-group">
-          <label class="input-label" for="acc-name">Account Name</label>
+          <label class="input-label" for="acc-name">${t('Account Name')}</label>
           <input class="input" type="text" id="acc-name" placeholder="e.g. Checking Account"
                  value="${existing?.name || ''}" />
         </div>
 
         <div class="input-group">
-          <label class="input-label" for="acc-balance">${isEdit ? 'Current Balance' : 'Starting Balance'}</label>
+          <label class="input-label" for="acc-balance">${isEdit ? t('Current Balance') : t('Starting Balance')}</label>
           <input class="input" type="number" id="acc-balance" placeholder="0.00" step="0.01"
                  value="${existing?.balance ?? ''}" inputmode="decimal" />
         </div>
 
         <div class="input-group">
-          <label class="input-label">Icon</label>
+          <label class="input-label">${t('Icon')}</label>
           <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
             ${['ph-bank', 'ph-piggy-bank', 'ph-wallet', 'ph-credit-card', 'ph-chart-line-up', 'ph-coin', 'ph-money'].map(icon => `
               <button class="btn btn-sm ${existing?.icon === icon ? 'btn-primary' : 'btn-secondary'} acc-icon-btn" data-icon="${icon}" style="width:44px;height:44px;padding:0;">
@@ -94,8 +95,8 @@ function showAccountForm(existing = null) {
           </div>
         </div>
 
-        <button class="btn btn-primary btn-full" id="acc-save">${isEdit ? 'Update' : 'Create'} Account</button>
-        ${isEdit ? '<button class="btn btn-danger btn-full" id="acc-delete">Delete Account</button>' : ''}
+        <button class="btn btn-primary btn-full" id="acc-save">${isEdit ? t('Update') : t('Create')} ${t('Account')}</button>
+        ${isEdit ? `<button class="btn btn-danger btn-full" id="acc-delete">${t('Delete Account')}</button>` : ''}
       `;
 
       let selectedIcon = existing?.icon || 'ph-bank';
@@ -117,13 +118,13 @@ function showAccountForm(existing = null) {
         const balance = parseFloat(container.querySelector('#acc-balance').value) || 0;
 
         if (!name) {
-          showToast('Please enter an account name', 'error');
+          showToast(t('Please enter an account name'), 'error');
           return;
         }
 
         if (isEdit) {
           State.updateAccount(existing.id, { name, balance, icon: selectedIcon });
-          showToast('Account updated', 'success');
+          showToast(t('Account updated'), 'success');
         } else {
           State.addAccount({
             id: generateId(),
@@ -135,7 +136,7 @@ function showAccountForm(existing = null) {
             color: 'oklch(0.72 0.15 185)',
             createdAt: new Date().toISOString()
           });
-          showToast('Account created', 'success');
+          showToast(t('Account created'), 'success');
         }
         closeSheet();
       });
@@ -144,7 +145,7 @@ function showAccountForm(existing = null) {
         container.querySelector('#acc-delete').addEventListener('click', () => {
           State.deleteAccount(existing.id);
           closeSheet();
-          showToast('Account deleted', 'success');
+          showToast(t('Account deleted'), 'success');
         });
       }
     }

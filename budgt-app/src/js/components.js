@@ -4,6 +4,7 @@
    ════════════════════════════════════════════════════ */
 
 import { Router } from './router.js';
+import { t } from './i18n.js';
 
 // ─────────── Bottom Navigation ───────────
 export function renderNav() {
@@ -20,9 +21,9 @@ export function renderNav() {
 
   nav.className = 'bottom-nav';
   nav.innerHTML = items.map(item => `
-    <button class="nav-item" data-route="${item.route}" aria-label="${item.label}">
+    <button class="nav-item" data-route="${item.route}" aria-label="${t(item.label)}">
       <i class="${item.icon}"></i>
-      <span>${item.label}</span>
+      <span>${t(item.label)}</span>
     </button>
   `).join('');
 
@@ -244,73 +245,73 @@ export function showTransactionForm(existingTx = null) {
   const formContent = (container) => {
     container.innerHTML = `
       <div class="tabs" id="tx-type-tabs">
-        <button class="tab ${(!existingTx || existingTx.type === 'withdrawal') ? 'active' : ''}" data-type="withdrawal">Expense</button>
-        <button class="tab ${existingTx?.type === 'deposit' ? 'active' : ''}" data-type="deposit">Income</button>
-        <button class="tab ${existingTx?.type === 'transfer' ? 'active' : ''}" data-type="transfer">Transfer</button>
+        <button class="tab ${(!existingTx || existingTx.type === 'withdrawal') ? 'active' : ''}" data-type="withdrawal">${t('Expense')}</button>
+        <button class="tab ${existingTx?.type === 'deposit' ? 'active' : ''}" data-type="deposit">${t('Income')}</button>
+        <button class="tab ${existingTx?.type === 'transfer' ? 'active' : ''}" data-type="transfer">${t('Transfer')}</button>
       </div>
 
       <div class="input-group">
-        <label class="input-label" for="tx-amount">Amount</label>
+        <label class="input-label" for="tx-amount">${t('Amount')}</label>
         <input class="input" type="number" id="tx-amount" placeholder="0.00" step="0.01" min="0"
                value="${existingTx?.amount || ''}" inputmode="decimal" />
       </div>
 
       <div class="input-group">
-        <label class="input-label" for="tx-desc">Description</label>
-        <input class="input" type="text" id="tx-desc" placeholder="What was this for?"
+        <label class="input-label" for="tx-desc">${t('Description')}</label>
+        <input class="input" type="text" id="tx-desc" placeholder="${t('What was this for?')}"
                value="${existingTx?.description || ''}" />
       </div>
 
       <div class="input-group" id="tx-category-group">
-        <label class="input-label" for="tx-category">Category</label>
+        <label class="input-label" for="tx-category">${t('Category')}</label>
         <div class="select-wrapper">
           <select class="input" id="tx-category">
-            <option value="">Select category</option>
+            <option value="">${t('Select category')}</option>
             ${categories.map(c => `
-              <option value="${c.id}" ${existingTx?.categoryId === c.id ? 'selected' : ''}>${c.name}</option>
+              <option value="${c.id}" ${existingTx?.categoryId === c.id ? 'selected' : ''}>${t(c.name)}</option>
             `).join('')}
           </select>
         </div>
       </div>
 
       <div class="input-group" id="tx-source-group">
-        <label class="input-label" for="tx-source">From Account</label>
+        <label class="input-label" for="tx-source">${t('From Account')}</label>
         <div class="select-wrapper">
           <select class="input" id="tx-source">
             ${accounts.map(a => `
-              <option value="${a.id}" ${existingTx?.sourceAccountId === a.id ? 'selected' : ''}>${a.name}</option>
+              <option value="${a.id}" ${existingTx?.sourceAccountId === a.id ? 'selected' : ''}>${t(a.name)}</option>
             `).join('')}
           </select>
         </div>
       </div>
 
       <div class="input-group" id="tx-dest-group" style="display: none;">
-        <label class="input-label" for="tx-dest">To Account</label>
+        <label class="input-label" for="tx-dest">${t('To Account')}</label>
         <div class="select-wrapper">
           <select class="input" id="tx-dest">
             ${accounts.map(a => `
-              <option value="${a.id}" ${existingTx?.destAccountId === a.id ? 'selected' : ''}>${a.name}</option>
+              <option value="${a.id}" ${existingTx?.destAccountId === a.id ? 'selected' : ''}>${t(a.name)}</option>
             `).join('')}
           </select>
         </div>
       </div>
 
       <div class="input-group">
-        <label class="input-label" for="tx-date">Date</label>
+        <label class="input-label" for="tx-date">${t('Date')}</label>
         <input class="input" type="date" id="tx-date" value="${existingTx ? existingTx.date.split('T')[0] : today}" />
       </div>
 
       <div class="input-group">
-        <label class="input-label" for="tx-notes">Notes</label>
-        <input class="input" type="text" id="tx-notes" placeholder="Optional notes"
+        <label class="input-label" for="tx-notes">${t('Notes')}</label>
+        <input class="input" type="text" id="tx-notes" placeholder="${t('Optional notes')}"
                value="${existingTx?.notes || ''}" />
       </div>
 
       <button class="btn btn-primary btn-full" id="tx-save">
-        ${isEdit ? 'Update' : 'Add'} Transaction
+        ${isEdit ? t('Update Transaction') : t('Add Transaction')}
       </button>
 
-      ${isEdit ? '<button class="btn btn-danger btn-full" id="tx-delete">Delete Transaction</button>' : ''}
+      ${isEdit ? `<button class="btn btn-danger btn-full" id="tx-delete">${t('Delete Transaction')}</button>` : ''}
     `;
 
     // Type tab switching
@@ -322,7 +323,7 @@ export function showTransactionForm(existingTx = null) {
 
     function updateFormForType(type) {
       selectedType = type;
-      tabs.forEach(t => t.classList.toggle('active', t.dataset.type === type));
+      tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.type === type));
 
       sourceGroup.style.display = (type === 'withdrawal' || type === 'transfer') ? '' : 'none';
       destGroup.style.display = (type === 'deposit' || type === 'transfer') ? '' : 'none';
@@ -330,7 +331,7 @@ export function showTransactionForm(existingTx = null) {
 
       // Update source label
       const sourceLabel = sourceGroup.querySelector('.input-label');
-      sourceLabel.textContent = type === 'transfer' ? 'From Account' : 'Account';
+      sourceLabel.textContent = type === 'transfer' ? t('From Account') : t('Account');
     }
 
     updateFormForType(selectedType);
@@ -345,11 +346,11 @@ export function showTransactionForm(existingTx = null) {
       const description = container.querySelector('#tx-desc').value.trim();
 
       if (!amount || amount <= 0) {
-        showToast('Please enter a valid amount', 'error');
+        showToast(t('Please enter a valid amount'), 'error');
         return;
       }
       if (!description) {
-        showToast('Please enter a description', 'error');
+        showToast(t('Please enter a description'), 'error');
         return;
       }
 
@@ -375,7 +376,7 @@ export function showTransactionForm(existingTx = null) {
       }
       State.addTransaction(tx);
       closeSheet();
-      showToast(isEdit ? 'Transaction updated' : 'Transaction added', 'success');
+      showToast(isEdit ? t('Transaction updated') : t('Transaction added'), 'success');
     });
 
     // Delete handler
@@ -383,13 +384,13 @@ export function showTransactionForm(existingTx = null) {
       container.querySelector('#tx-delete').addEventListener('click', () => {
         State.deleteTransaction(existingTx.id);
         closeSheet();
-        showToast('Transaction deleted', 'success');
+        showToast(t('Transaction deleted'), 'success');
       });
     }
   };
 
   showSheet({
-    title: isEdit ? 'Edit Transaction' : 'New Transaction',
+    title: isEdit ? t('Update Transaction') : t('Add Transaction'),
     content: formContent
   });
 }
