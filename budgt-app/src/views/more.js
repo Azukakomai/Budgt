@@ -705,6 +705,10 @@ export function settingsView(container) {
 
     <div class="settings-group">
       <div class="settings-group-title">${t('Data')}</div>
+      <div class="settings-item" id="set-report">
+        <span class="settings-item-label">${t('Download Report')}</span>
+        <span class="settings-item-value"><i class="ph ph-file-csv"></i></span>
+      </div>
       <div class="settings-item" id="set-export">
         <span class="settings-item-label">${t('Export Data')}</span>
         <span class="settings-item-value"><i class="ph ph-download"></i></span>
@@ -811,6 +815,344 @@ export function settingsView(container) {
             settingsView(container);
             setTimeout(() => window.location.reload(), 600);
           });
+        });
+      }
+    });
+  });
+
+  // Download Report (format picker → PDF or XLSX)
+  document.getElementById('set-report')?.addEventListener('click', () => {
+    showSheet({
+      title: t('Download Report'),
+      content: (ctr) => {
+        ctr.innerHTML = `
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-2) 0;">
+            <div style="font-size:var(--text-sm);color:var(--text-tertiary);text-align:center;margin-bottom:var(--space-1);">
+              ${t('Choose a format for your financial report')}
+            </div>
+            <button class="btn btn-full" id="dl-pdf" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4);background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);text-align:left;">
+              <div style="width:44px;height:44px;border-radius:var(--radius-md);background:oklch(0.55 0.15 15 / 0.12);color:oklch(0.55 0.15 15);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">
+                <i class="ph ph-file-pdf"></i>
+              </div>
+              <div>
+                <div style="font-weight:600;font-size:var(--text-base);color:var(--text-primary);">${t('PDF Report')}</div>
+                <div style="font-size:var(--text-xs);color:var(--text-tertiary);margin-top:2px;">${t('Formal financial statement, ready to print')}</div>
+              </div>
+            </button>
+            <button class="btn btn-full" id="dl-xlsx" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4);background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);text-align:left;">
+              <div style="width:44px;height:44px;border-radius:var(--radius-md);background:oklch(0.55 0.16 155 / 0.12);color:oklch(0.55 0.16 155);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">
+                <i class="ph ph-file-xls"></i>
+              </div>
+              <div>
+                <div style="font-weight:600;font-size:var(--text-base);color:var(--text-primary);">${t('Excel Spreadsheet')}</div>
+                <div style="font-size:var(--text-xs);color:var(--text-tertiary);margin-top:2px;">${t('Editable workbook with P&L and transactions')}</div>
+              </div>
+            </button>
+          </div>
+        `;
+
+        // ── Shared data gathering ──
+        function gatherReportData() {
+          const transactions = State.getTransactions();
+          const categories = State.getCategories();
+          const accounts = State.getAccounts();
+          const settings = State.getSettings();
+
+          const monthlyMap = {};
+          transactions.forEach(tx => {
+            const d = new Date(tx.date);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            if (!monthlyMap[key]) monthlyMap[key] = { income: 0, expenses: 0 };
+            if (tx.type === 'deposit') monthlyMap[key].income += tx.amount;
+            else if (tx.type === 'withdrawal') monthlyMap[key].expenses += tx.amount;
+          });
+
+          const sortedMonths = Object.keys(monthlyMap).sort();
+          let totalIncome = 0, totalExpenses = 0;
+          const plRows = sortedMonths.map(month => {
+            const { income, expenses } = monthlyMap[month];
+            totalIncome += income;
+            totalExpenses += expenses;
+            return { month, income, expenses, net: income - expenses };
+          });
+
+          const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+          const txRows = sorted.map(tx => {
+            const cat = categories.find(c => c.id === tx.categoryId);
+            const acc = accounts.find(a => a.id === (tx.sourceAccountId || tx.destAccountId));
+            const dateStr = new Date(tx.date).toLocaleDateString(settings.locale || 'en-US');
+            const type = tx.type === 'withdrawal' ? 'Expense' : tx.type === 'deposit' ? 'Income' : 'Transfer';
+            const signedAmount = tx.type === 'withdrawal' ? -tx.amount : tx.amount;
+            return { date: dateStr, description: tx.description, category: cat?.name || 'Uncategorized', type, amount: signedAmount, account: acc?.name || '' };
+          });
+
+          return { plRows, txRows, totalIncome, totalExpenses, net: totalIncome - totalExpenses, currency: settings.currency || 'USD', settings };
+        }
+
+        // ── Format helpers ──
+        function fmtMoney(val) {
+          return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // ── PDF Generation ──
+        ctr.querySelector('#dl-pdf').addEventListener('click', () => {
+          closeSheet();
+          const data = gatherReportData();
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+          const pageW = doc.internal.pageSize.getWidth();
+          const margin = 18;
+          const contentW = pageW - margin * 2;
+          let y = margin;
+          const today = new Date().toLocaleDateString(data.settings.locale || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+          // ── Header ──
+          doc.setFillColor(22, 24, 32);
+          doc.rect(0, 0, pageW, 38, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(22);
+          doc.text('BUDGT', margin, 16);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.text('Financial Report', margin, 23);
+          doc.setFontSize(9);
+          doc.setTextColor(180, 180, 190);
+          doc.text(`Generated: ${today}`, margin, 30);
+          doc.text(`Currency: ${data.currency}`, pageW - margin, 30, { align: 'right' });
+          y = 48;
+
+          // ── Divider line helper ──
+          function drawLine(yPos) {
+            doc.setDrawColor(200, 200, 210);
+            doc.setLineWidth(0.3);
+            doc.line(margin, yPos, pageW - margin, yPos);
+          }
+
+          // ── P&L Section Title ──
+          doc.setTextColor(22, 24, 32);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(13);
+          doc.text('Profit & Loss Statement', margin, y);
+          y += 2;
+          drawLine(y + 1);
+          y += 6;
+
+          // ── P&L Table ──
+          const plHead = [['Period', 'Income', 'Expenses', 'Net Income']];
+          const plBody = data.plRows.map(r => [
+            r.month,
+            fmtMoney(r.income),
+            fmtMoney(r.expenses),
+            fmtMoney(r.net)
+          ]);
+
+          doc.autoTable({
+            startY: y,
+            head: plHead,
+            body: plBody,
+            foot: [['TOTAL', fmtMoney(data.totalIncome), fmtMoney(data.totalExpenses), fmtMoney(data.net)]],
+            margin: { left: margin, right: margin },
+            theme: 'plain',
+            styles: {
+              fontSize: 9,
+              cellPadding: { top: 3, right: 4, bottom: 3, left: 4 },
+              lineColor: [210, 210, 220],
+              lineWidth: 0.25,
+              textColor: [40, 40, 50],
+              font: 'helvetica',
+            },
+            headStyles: {
+              fillColor: [245, 245, 248],
+              textColor: [80, 80, 95],
+              fontStyle: 'bold',
+              fontSize: 8,
+              halign: 'left',
+            },
+            footStyles: {
+              fillColor: [22, 24, 32],
+              textColor: [255, 255, 255],
+              fontStyle: 'bold',
+              fontSize: 9.5,
+            },
+            columnStyles: {
+              0: { halign: 'left', cellWidth: contentW * 0.32 },
+              1: { halign: 'right', cellWidth: contentW * 0.22 },
+              2: { halign: 'right', cellWidth: contentW * 0.22 },
+              3: { halign: 'right', cellWidth: contentW * 0.24 },
+            },
+            didParseCell: (hookData) => {
+              // Color net negative values red in body rows
+              if (hookData.section === 'body' && hookData.column.index === 3) {
+                const row = data.plRows[hookData.row.index];
+                if (row && row.net < 0) {
+                  hookData.cell.styles.textColor = [200, 50, 50];
+                }
+              }
+              // Color total net
+              if (hookData.section === 'foot' && hookData.column.index === 3) {
+                if (data.net < 0) {
+                  hookData.cell.styles.textColor = [255, 120, 120];
+                } else {
+                  hookData.cell.styles.textColor = [120, 230, 170];
+                }
+              }
+            }
+          });
+
+          y = doc.lastAutoTable.finalY + 14;
+
+          // ── Summary boxes ──
+          const boxW = contentW / 3 - 3;
+          const boxH = 20;
+          const summaryItems = [
+            { label: 'Total Income', value: fmtMoney(data.totalIncome), color: [45, 180, 120] },
+            { label: 'Total Expenses', value: fmtMoney(data.totalExpenses), color: [200, 70, 70] },
+            { label: 'Net Income', value: fmtMoney(data.net), color: data.net >= 0 ? [45, 180, 120] : [200, 70, 70] },
+          ];
+
+          // Check if we need a new page
+          if (y + boxH + 20 > doc.internal.pageSize.getHeight() - margin) {
+            doc.addPage();
+            y = margin;
+          }
+
+          summaryItems.forEach((item, i) => {
+            const x = margin + i * (boxW + 4.5);
+            doc.setFillColor(248, 248, 252);
+            doc.roundedRect(x, y, boxW, boxH, 2, 2, 'F');
+            doc.setFontSize(7.5);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(120, 120, 135);
+            doc.text(item.label, x + boxW / 2, y + 7, { align: 'center' });
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...item.color);
+            doc.text(item.value, x + boxW / 2, y + 15, { align: 'center' });
+          });
+
+          y += boxH + 14;
+
+          // ── Transaction Ledger Title ──
+          if (y + 10 > doc.internal.pageSize.getHeight() - margin) {
+            doc.addPage();
+            y = margin;
+          }
+          doc.setTextColor(22, 24, 32);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(13);
+          doc.text('Transaction Ledger', margin, y);
+          y += 2;
+          drawLine(y + 1);
+          y += 6;
+
+          // ── Transactions Table ──
+          const txHead = [['Date', 'Description', 'Category', 'Type', 'Amount']];
+          const txBody = data.txRows.map(r => [
+            r.date,
+            r.description,
+            r.category,
+            r.type,
+            fmtMoney(r.amount)
+          ]);
+
+          doc.autoTable({
+            startY: y,
+            head: txHead,
+            body: txBody,
+            margin: { left: margin, right: margin },
+            theme: 'striped',
+            styles: {
+              fontSize: 8,
+              cellPadding: { top: 2.5, right: 3, bottom: 2.5, left: 3 },
+              textColor: [40, 40, 50],
+              lineColor: [230, 230, 235],
+              lineWidth: 0.15,
+              font: 'helvetica',
+            },
+            headStyles: {
+              fillColor: [245, 245, 248],
+              textColor: [80, 80, 95],
+              fontStyle: 'bold',
+              fontSize: 7.5,
+            },
+            alternateRowStyles: {
+              fillColor: [252, 252, 254],
+            },
+            columnStyles: {
+              0: { halign: 'left', cellWidth: contentW * 0.15 },
+              1: { halign: 'left', cellWidth: contentW * 0.32 },
+              2: { halign: 'left', cellWidth: contentW * 0.20 },
+              3: { halign: 'center', cellWidth: contentW * 0.13 },
+              4: { halign: 'right', cellWidth: contentW * 0.20 },
+            },
+            didParseCell: (hookData) => {
+              if (hookData.section === 'body' && hookData.column.index === 4) {
+                const row = data.txRows[hookData.row.index];
+                if (row && row.amount < 0) {
+                  hookData.cell.styles.textColor = [200, 50, 50];
+                } else if (row && row.amount > 0) {
+                  hookData.cell.styles.textColor = [45, 150, 100];
+                }
+              }
+            }
+          });
+
+          // ── Footer on every page ──
+          const pageCount = doc.internal.getNumberOfPages();
+          for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            const pageH = doc.internal.pageSize.getHeight();
+            doc.setDrawColor(210, 210, 220);
+            doc.setLineWidth(0.3);
+            doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
+            doc.setFontSize(7);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(150, 150, 165);
+            doc.text('Budgt Financial Report — Confidential', margin, pageH - 8);
+            doc.text(`Page ${i} of ${pageCount}`, pageW - margin, pageH - 8, { align: 'right' });
+          }
+
+          doc.save(`budgt-report-${new Date().toISOString().split('T')[0]}.pdf`);
+          showToast(t('PDF report downloaded'), 'success');
+        });
+
+        // ── XLSX Generation ──
+        ctr.querySelector('#dl-xlsx').addEventListener('click', () => {
+          closeSheet();
+          const data = gatherReportData();
+          const wb = XLSX.utils.book_new();
+
+          // Sheet 1: P&L
+          const plHeader = ['Period', 'Income', 'Expenses', 'Net Income'];
+          const plData = [
+            ['Profit & Loss Statement'],
+            ['Generated: ' + new Date().toLocaleDateString(data.settings.locale || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
+            [],
+            plHeader,
+            ...data.plRows.map(r => [r.month, r.income, r.expenses, r.net]),
+            [],
+            ['TOTAL', data.totalIncome, data.totalExpenses, data.net]
+          ];
+          const plSheet = XLSX.utils.aoa_to_sheet(plData);
+          // Column widths
+          plSheet['!cols'] = [{ wch: 14 }, { wch: 16 }, { wch: 16 }, { wch: 16 }];
+          XLSX.utils.book_append_sheet(wb, plSheet, 'Profit & Loss');
+
+          // Sheet 2: Transactions
+          const txHeader = ['Date', 'Description', 'Category', 'Type', 'Amount', 'Account'];
+          const txData = [
+            ['Transaction Ledger'],
+            [],
+            txHeader,
+            ...data.txRows.map(r => [r.date, r.description, r.category, r.type, r.amount, r.account])
+          ];
+          const txSheet = XLSX.utils.aoa_to_sheet(txData);
+          txSheet['!cols'] = [{ wch: 14 }, { wch: 30 }, { wch: 18 }, { wch: 10 }, { wch: 14 }, { wch: 20 }];
+          XLSX.utils.book_append_sheet(wb, txSheet, 'Transactions');
+
+          XLSX.writeFile(wb, `budgt-report-${new Date().toISOString().split('T')[0]}.xlsx`);
+          showToast(t('Excel report downloaded'), 'success');
         });
       }
     });
