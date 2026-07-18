@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Budgt B Icon - Main Stroke Path -->
+    <path
+        android:pathData="M36,67.5 V40.5 c0,-2.475 2.025,-4.5 4.5,-4.5 h9 c4.95,0 9,4.05 9,9 c0,4.95 -4.05,9 -9,9 h-9"
+        android:strokeColor="#3DD6C5"
+        android:strokeWidth="5.625"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Budgt B Icon - Lower Loop -->
+    <path
+        android:pathData="M40.5,54 h9 c4.95,0 9,4.05 9,9 c0,4.95 -4.05,9 -9,9 h-9"
+        android:strokeColor="#3DD6C5"
+        android:strokeWidth="5.625"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+
+    <!-- Accent Top Right Dot -->
+    <path
+        android:pathData="M67.5,40.5 m-4.5,0 a4.5,4.5 0 1,0 9,0 a4.5,4.5 0 1,0 -9,0"
+        android:fillColor="#3DD6C5"
+        android:fillAlpha="0.5" />
+
+    <!-- Accent Bottom Right Dot -->
+    <path
+        android:pathData="M67.5,67.5 m-4.5,0 a4.5,4.5 0 1,0 9,0 a4.5,4.5 0 1,0 -9,0"
+        android:fillColor="#3DD6C5"
+        android:fillAlpha="0.5" />
+
+</vector>
