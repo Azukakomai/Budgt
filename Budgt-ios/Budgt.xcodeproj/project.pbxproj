@@ -1,0 +1,259 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000012C45000100000001 /* BudgtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000022C45000100000001 /* BudgtApp.swift */; };
+		A10000032C45000100000001 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000042C45000100000001 /* Models.swift */; };
+		A10000052C45000100000001 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000062C45000100000001 /* CurrencyFormatter.swift */; };
+		A10000072C45000100000001 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000082C45000100000001 /* DataStore.swift */; };
+		A10000092C45000100000001 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000A2C45000100000001 /* MainTabView.swift */; };
+		A100000B2C45000100000001 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000C2C45000100000001 /* DashboardView.swift */; };
+		A100000D2C45000100000001 /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000E2C45000100000001 /* TransactionsView.swift */; };
+		A100000F2C45000100000001 /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000102C45000100000001 /* AccountsView.swift */; };
+		A10000112C45000100000001 /* BudgetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000122C45000100000001 /* BudgetsView.swift */; };
+		A10000132C45000100000001 /* BillsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000142C45000100000001 /* BillsView.swift */; };
+		A10000152C45000100000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000162C45000100000001 /* SettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A10000002C45000100000001 /* Budgt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Budgt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000022C45000100000001 /* BudgtApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgtApp.swift; sourceTree = "<group>"; };
+		A10000042C45000100000001 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		A10000062C45000100000001 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
+		A10000082C45000100000001 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		A100000A2C45000100000001 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		A100000C2C45000100000001 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		A100000E2C45000100000001 /* TransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsView.swift; sourceTree = "<group>"; };
+		A10000102C45000100000001 /* AccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsView.swift; sourceTree = "<group>"; };
+		A10000122C45000100000001 /* BudgetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetsView.swift; sourceTree = "<group>"; };
+		A10000142C45000100000001 /* BillsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillsView.swift; sourceTree = "<group>"; };
+		A10000162C45000100000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A10000172C45000100000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000182C45000100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000192C45000100000001 = {
+			isa = PBXGroup;
+			children = (
+				A100001A2C45000100000001 /* Budgt */,
+				A100001B2C45000100000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A100001A2C45000100000001 /* Budgt */ = {
+			isa = PBXGroup;
+			children = (
+				A10000022C45000100000001 /* BudgtApp.swift */,
+				A10000042C45000100000001 /* Models.swift */,
+				A10000062C45000100000001 /* CurrencyFormatter.swift */,
+				A10000082C45000100000001 /* DataStore.swift */,
+				A100000A2C45000100000001 /* MainTabView.swift */,
+				A100000C2C45000100000001 /* DashboardView.swift */,
+				A100000E2C45000100000001 /* TransactionsView.swift */,
+				A10000102C45000100000001 /* AccountsView.swift */,
+				A10000122C45000100000001 /* BudgetsView.swift */,
+				A10000142C45000100000001 /* BillsView.swift */,
+				A10000162C45000100000001 /* SettingsView.swift */,
+				A10000172C45000100000001 /* Info.plist */,
+			);
+			path = Budgt;
+			sourceTree = "<group>";
+		};
+		A100001B2C45000100000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A10000002C45000100000001 /* Budgt.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A100001C2C45000100000001 /* Budgt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A100001D2C45000100000001 /* Build configuration list for PBXNativeTarget "Budgt" */;
+			buildPhases = (
+				A100001E2C45000100000001 /* Sources */,
+				A10000182C45000100000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Budgt;
+			productName = Budgt;
+			productReference = A10000002C45000100000001 /* Budgt.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A100001F2C45000100000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A100001C2C45000100000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A10000202C45000100000001 /* Build configuration list for PBXProject "Budgt" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A10000192C45000100000001;
+			productRefGroup = A100001B2C45000100000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A100001C2C45000100000001 /* Budgt */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A100001E2C45000100000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000012C45000100000001 /* BudgtApp.swift in Sources */,
+				A10000032C45000100000001 /* Models.swift in Sources */,
+				A10000052C45000100000001 /* CurrencyFormatter.swift in Sources */,
+				A10000072C45000100000001 /* DataStore.swift in Sources */,
+				A10000092C45000100000001 /* MainTabView.swift in Sources */,
+				A100000B2C45000100000001 /* DashboardView.swift in Sources */,
+				A100000D2C45000100000001 /* TransactionsView.swift in Sources */,
+				A100000F2C45000100000001 /* AccountsView.swift in Sources */,
+				A10000112C45000100000001 /* BudgetsView.swift in Sources */,
+				A10000132C45000100000001 /* BillsView.swift in Sources */,
+				A10000152C45000100000001 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A10000212C45000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_PROTOTHER_PREPROCESSOR_DEFINITIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = Budgt/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.budgt.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A10000222C45000100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_PROTOTHER_PREPROCESSOR_DEFINITIONS = YES;
+				INFOPLIST_FILE = Budgt/App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.budgt.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A10000232C45000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A10000242C45000100000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A100001D2C45000100000001 /* Build configuration list for PBXNativeTarget "Budgt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000212C45000100000001 /* Debug */,
+				A10000222C45000100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000202C45000100000001 /* Build configuration list for PBXProject "Budgt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000232C45000100000001 /* Debug */,
+				A10000242C45000100000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A100001F2C45000100000001 /* Project object */;
+}
