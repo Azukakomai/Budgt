@@ -1,14 +1,25 @@
 package com.example.budgt
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
+import android.util.Base64
+import android.webkit.JavascriptInterface
+import android.webkit.URLUtil
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
@@ -17,10 +28,69 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.webkit.WebViewAssetLoader
 import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
+import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var webView: WebView
+
+    class AndroidBridge(private val context: Context) {
+        @JavascriptInterface
+        fun downloadFile(base64Data: String, fileName: String, mimeType: String) {
+            try {
+                val cleanBase64 = if (base64Data.contains(",")) {
+                    base64Data.substringAfter(",")
+                } else {
+                    base64Data
+                }
+                val bytes = Base64.decode(cleanBase64, Base64.DEFAULT)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val contentValues = ContentValues().apply {
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                        put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+                        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                    }
+                    val resolver = context.contentResolver
+                    val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+                    if (uri != null) {
+                        resolver.openOutputStream(uri)?.use { outputStream ->
+                            outputStream.write(bytes)
+                        }
+                        showSuccessToast(fileName)
+                    } else {
+                        showErrorToast("Failed to save file")
+                    }
+                } else {
+                    val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    if (!downloadsDir.exists()) {
+                        downloadsDir.mkdirs()
+                    }
+                    val file = File(downloadsDir, fileName)
+                    FileOutputStream(file).use { outputStream ->
+                        outputStream.write(bytes)
+                    }
+                    showSuccessToast(fileName)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                showErrorToast(e.localizedMessage ?: "Download failed")
+            }
+        }
+
+        private fun showSuccessToast(fileName: String) {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, "Saved to Downloads: $fileName", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        private fun showErrorToast(msg: String) {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, "Download error: $msg", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +141,22 @@ class MainActivity : ComponentActivity() {
             useWideViewPort = true
             loadWithOverviewMode = true
             textZoom = 100
+        }
+
+        // ── Register Native JS Bridge & Download Listener for WebView downloads ──
+        webView.addJavascriptInterface(AndroidBridge(this), "AndroidBridge")
+
+        webView.setDownloadListener { url, _, contentDisposition, mimetype, _ ->
+            if (url != null && (url.startsWith("data:") || url.startsWith("blob:"))) {
+                val bridge = AndroidBridge(this@MainActivity)
+                val mime = if (mimetype.isNullOrEmpty()) "application/octet-stream" else mimetype
+                var fileName = URLUtil.guessFileName(url, contentDisposition, mime)
+                if (fileName.isEmpty() || fileName == "downloadfile") {
+                    val ext = if (mime.contains("pdf")) "pdf" else if (mime.contains("sheet") || mime.contains("excel")) "xlsx" else "dat"
+                    fileName = "budgt-report-${System.currentTimeMillis()}.$ext"
+                }
+                bridge.downloadFile(url, fileName, mime)
+            }
         }
 
         // ── Use WebViewAssetLoader to serve local assets via https://appassets.androidplatform.net/ ──
