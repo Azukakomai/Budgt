@@ -35,7 +35,14 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var webView: WebView
 
-    class AndroidBridge(private val context: Context) {
+    class AndroidBridge(private val activity: MainActivity) {
+        @JavascriptInterface
+        fun setTheme(isDark: Boolean) {
+            Handler(Looper.getMainLooper()).post {
+                activity.updateNativeTheme(isDark)
+            }
+        }
+
         @JavascriptInterface
         fun downloadFile(base64Data: String, fileName: String, mimeType: String) {
             try {
@@ -52,7 +59,7 @@ class MainActivity : ComponentActivity() {
                         put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
                         put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
                     }
-                    val resolver = context.contentResolver
+                    val resolver = activity.contentResolver
                     val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
                     if (uri != null) {
                         resolver.openOutputStream(uri)?.use { outputStream ->
@@ -81,31 +88,38 @@ class MainActivity : ComponentActivity() {
 
         private fun showSuccessToast(fileName: String) {
             Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "Saved to Downloads: $fileName", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Saved to Downloads: $fileName", Toast.LENGTH_LONG).show()
             }
         }
 
         private fun showErrorToast(msg: String) {
             Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, "Download error: $msg", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Download error: $msg", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    fun updateNativeTheme(isDark: Boolean) {
+        val color = if (isDark) Color.parseColor("#161820") else Color.parseColor("#f4f4f6")
+        @Suppress("DEPRECATION")
+        window.statusBarColor = color
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = color
+        if (::webView.isInitialized) {
+            webView.setBackgroundColor(color)
+        }
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = !isDark
+        insetsController.isAppearanceLightNavigationBars = !isDark
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ── Edge-to-edge dark theme ──
+        // ── Edge-to-edge theme setup ──
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        @Suppress("DEPRECATION")
-        window.statusBarColor = Color.parseColor("#161820")
-        @Suppress("DEPRECATION")
-        window.navigationBarColor = Color.parseColor("#161820")
-
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-        insetsController.isAppearanceLightStatusBars = false
-        insetsController.isAppearanceLightNavigationBars = false
+        updateNativeTheme(isDark = true)
 
         // ── WebView setup ──
         webView = WebView(this)
