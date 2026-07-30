@@ -1,7 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#161820"/>
-  <path d="M8 22V10c0-1.1.9-2 2-2h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4" stroke="#3dd6c5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M10 16h4c2.2 0 4 1.8 4 4s-1.8 4-4 4h-4" stroke="#3dd6c5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="22" cy="10" r="2" fill="#3dd6c5" opacity="0.4"/>
-  <circle cx="22" cy="22" r="2" fill="#3dd6c5" opacity="0.4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800&amp;display=swap');
+      .brand-b {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+        font-weight: 800;
+        font-size: 380px;
+        fill: #21252D;
+      }
+    </style>
+  </defs>
+
+  <!-- Off-white Squircle Background -->
+  <rect width="512" height="512" rx="120" fill="#F4F5F7"/>
+
+  <!-- Scaled-Up Inter ExtraBold 800 Letter B -->
+  <text x="198" y="382" class="brand-b" text-anchor="middle">B</text>
+
+  <!-- Scaled-Up Emerald Green Triangle -->
+  <polygon points="382,145 330,259 434,259" fill="#05C48A"/>
 </svg>
