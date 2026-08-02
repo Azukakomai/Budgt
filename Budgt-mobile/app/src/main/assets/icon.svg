@@ -1,22 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <defs>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800&amp;display=swap');
-      .brand-b {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-        font-weight: 800;
-        font-size: 380px;
-        fill: #21252D;
-      }
-    </style>
-  </defs>
-
   <!-- Off-white Squircle Background -->
   <rect width="512" height="512" rx="120" fill="#F4F5F7"/>
 
-  <!-- Scaled-Up Inter ExtraBold 800 Letter B -->
-  <text x="198" y="382" class="brand-b" text-anchor="middle">B</text>
+  <!-- Pure Vector Path Letter B -->
+  <path fill="#21252D" fill-rule="evenodd" d="M128 120h97c31 0 50 16.5 50 47.5 0 26-19 47.5-50 54.6 35.6 7.1 61.8 28.5 61.8 76 0 42.9-26.1 77.9-71.3 77.9H128V120zm52.2 38v66.5h42.8c14.2 0 23.7-7.1 23.7-19 0-11.9-9.5-19-23.7-19h-42.8zm0 109v76H216c16.6 0 28.5-9.5 28.5-23.7 0-14.2-11.9-23.7-28.5-23.7h-35.8z"/>
 
-  <!-- Scaled-Up Emerald Green Triangle -->
+  <!-- Emerald Green Triangle -->
   <polygon points="382,145 330,259 434,259" fill="#05C48A"/>
 </svg>

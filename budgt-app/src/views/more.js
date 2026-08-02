@@ -5,11 +5,14 @@
 
 import { State } from '../js/state.js';
 import { Store } from '../js/store.js';
-import { formatCurrency, formatDate, percentage, generateId, CATEGORY_COLORS } from '../js/utils.js';
+import { formatCurrency, formatDate, percentage, generateId, CATEGORY_COLORS, triggerFileDownload } from '../js/utils.js';
 import { renderHeader, hideFab, showSheet, closeSheet, showToast, renderNav } from '../js/components.js';
 import { renderBarChart, renderDonutChart } from '../js/charts.js';
 import { resetToZero } from '../js/seed.js';
 import { t, getLanguageName } from '../js/i18n.js';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx';
 
 export function moreView(container) {
   renderHeader(t('More'));
@@ -693,6 +696,10 @@ export function settingsView(container) {
   container.innerHTML = `
     <div class="settings-group">
       <div class="settings-group-title">${t('Preferences')}</div>
+      <div class="settings-item" id="set-theme">
+        <span class="settings-item-label">${t('Theme')}</span>
+        <span class="settings-item-value">${t(settings.theme === 'light' ? 'Light' : settings.theme === 'system' ? 'System' : 'Dark')} <i class="ph ph-caret-right"></i></span>
+      </div>
       <div class="settings-item" id="set-currency">
         <span class="settings-item-label">${t('Currency')}</span>
         <span class="settings-item-value">${settings.currency} <i class="ph ph-caret-right"></i></span>
@@ -735,6 +742,43 @@ export function settingsView(container) {
       </div>
     </div>
   `;
+
+  // Theme setting
+  document.getElementById('set-theme')?.addEventListener('click', () => {
+    showSheet({
+      title: t('Select Theme'),
+      content: (ctr) => {
+        const themes = [
+          { code: 'dark', name: t('Dark'), icon: 'ph-moon' },
+          { code: 'light', name: t('Light'), icon: 'ph-sun' },
+          { code: 'system', name: t('System'), icon: 'ph-desktop' },
+        ];
+        ctr.innerHTML = `<div class="list">${themes.map(th => `
+          <div class="list-item theme-pick" data-code="${th.code}" data-name="${th.name}">
+            <div class="list-item-icon" style="background:var(--bg-elevated);color:var(--text-primary);margin-right:var(--space-3);">
+              <i class="ph ${th.icon}"></i>
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">${th.name}</div>
+            </div>
+            ${settings.theme === th.code ? '<i class="ph ph-check" style="color:var(--accent);"></i>' : ''}
+          </div>
+        `).join('')}</div>`;
+
+        ctr.querySelectorAll('.theme-pick').forEach(item => {
+          item.addEventListener('click', () => {
+            const newTheme = item.dataset.code;
+            State.updateSettings({
+              theme: newTheme
+            });
+            closeSheet();
+            showToast(`${t('Theme set to ')}${item.dataset.name}`, 'success');
+            settingsView(container);
+          });
+        });
+      }
+    });
+  });
 
   // Currency setting
   document.getElementById('set-currency')?.addEventListener('click', () => {
@@ -873,7 +917,10 @@ export function settingsView(container) {
             const { income, expenses } = monthlyMap[month];
             totalIncome += income;
             totalExpenses += expenses;
-            return { month, income, expenses, net: income - expenses };
+            const [yr, mo] = month.split('-');
+            const monthDate = new Date(parseInt(yr), parseInt(mo) - 1, 1);
+            const monthLabel = monthDate.toLocaleDateString(settings.locale || 'en-US', { year: 'numeric', month: 'short' });
+            return { month: monthLabel, income, expenses, net: income - expenses };
           });
 
           const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -881,9 +928,11 @@ export function settingsView(container) {
             const cat = categories.find(c => c.id === tx.categoryId);
             const acc = accounts.find(a => a.id === (tx.sourceAccountId || tx.destAccountId));
             const dateStr = new Date(tx.date).toLocaleDateString(settings.locale || 'en-US');
-            const type = tx.type === 'withdrawal' ? 'Expense' : tx.type === 'deposit' ? 'Income' : 'Transfer';
+            const type = tx.type === 'withdrawal' ? t('Expense') : tx.type === 'deposit' ? t('Income') : t('Transfer');
             const signedAmount = tx.type === 'withdrawal' ? -tx.amount : tx.amount;
-            return { date: dateStr, description: tx.description, category: cat?.name || 'Uncategorized', type, amount: signedAmount, account: acc?.name || '' };
+            const catName = cat?.name ? t(cat.name) : t('Uncategorized');
+            const accName = acc?.name ? t(acc.name) : '';
+            return { date: dateStr, description: tx.description, category: catName, type, amount: signedAmount, account: accName };
           });
 
           return { plRows, txRows, totalIncome, totalExpenses, net: totalIncome - totalExpenses, currency: settings.currency || 'USD', settings };
@@ -898,7 +947,6 @@ export function settingsView(container) {
         ctr.querySelector('#dl-pdf').addEventListener('click', () => {
           closeSheet();
           const data = gatherReportData();
-          const { jsPDF } = window.jspdf;
           const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
           const pageW = doc.internal.pageSize.getWidth();
           const margin = 18;
@@ -915,11 +963,11 @@ export function settingsView(container) {
           doc.text('BUDGT', margin, 16);
           doc.setFontSize(10);
           doc.setFont('helvetica', 'normal');
-          doc.text('Financial Report', margin, 23);
+          doc.text(t('Financial Report'), margin, 23);
           doc.setFontSize(9);
           doc.setTextColor(180, 180, 190);
-          doc.text(`Generated: ${today}`, margin, 30);
-          doc.text(`Currency: ${data.currency}`, pageW - margin, 30, { align: 'right' });
+          doc.text(`${t('Generated: ')}${today}`, margin, 30);
+          doc.text(`${t('Currency: ')}${data.currency}`, pageW - margin, 30, { align: 'right' });
           y = 48;
 
           // ── Divider line helper ──
@@ -933,13 +981,13 @@ export function settingsView(container) {
           doc.setTextColor(22, 24, 32);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(13);
-          doc.text('Profit & Loss Statement', margin, y);
+          doc.text(t('Profit & Loss Statement'), margin, y);
           y += 2;
           drawLine(y + 1);
           y += 6;
 
           // ── P&L Table ──
-          const plHead = [['Period', 'Income', 'Expenses', 'Net Income']];
+          const plHead = [[t('Period'), t('Income'), t('Expenses'), t('Net Income')]];
           const plBody = data.plRows.map(r => [
             r.month,
             fmtMoney(r.income),
@@ -947,11 +995,11 @@ export function settingsView(container) {
             fmtMoney(r.net)
           ]);
 
-          doc.autoTable({
+          autoTable(doc, {
             startY: y,
             head: plHead,
             body: plBody,
-            foot: [['TOTAL', fmtMoney(data.totalIncome), fmtMoney(data.totalExpenses), fmtMoney(data.net)]],
+            foot: [[t('TOTAL'), fmtMoney(data.totalIncome), fmtMoney(data.totalExpenses), fmtMoney(data.net)]],
             margin: { left: margin, right: margin },
             theme: 'plain',
             styles: {
@@ -1006,9 +1054,9 @@ export function settingsView(container) {
           const boxW = contentW / 3 - 3;
           const boxH = 20;
           const summaryItems = [
-            { label: 'Total Income', value: fmtMoney(data.totalIncome), color: [45, 180, 120] },
-            { label: 'Total Expenses', value: fmtMoney(data.totalExpenses), color: [200, 70, 70] },
-            { label: 'Net Income', value: fmtMoney(data.net), color: data.net >= 0 ? [45, 180, 120] : [200, 70, 70] },
+            { label: t('Total Income'), value: fmtMoney(data.totalIncome), color: [45, 180, 120] },
+            { label: t('Total Expenses'), value: fmtMoney(data.totalExpenses), color: [200, 70, 70] },
+            { label: t('Net Income'), value: fmtMoney(data.net), color: data.net >= 0 ? [45, 180, 120] : [200, 70, 70] },
           ];
 
           // Check if we need a new page
@@ -1041,13 +1089,13 @@ export function settingsView(container) {
           doc.setTextColor(22, 24, 32);
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(13);
-          doc.text('Transaction Ledger', margin, y);
+          doc.text(t('Transaction Ledger'), margin, y);
           y += 2;
           drawLine(y + 1);
           y += 6;
 
           // ── Transactions Table ──
-          const txHead = [['Date', 'Description', 'Category', 'Type', 'Amount']];
+          const txHead = [[t('Date'), t('Description'), t('Category'), t('Type'), t('Amount')]];
           const txBody = data.txRows.map(r => [
             r.date,
             r.description,
@@ -1056,7 +1104,7 @@ export function settingsView(container) {
             fmtMoney(r.amount)
           ]);
 
-          doc.autoTable({
+          autoTable(doc, {
             startY: y,
             head: txHead,
             body: txBody,
@@ -1109,11 +1157,12 @@ export function settingsView(container) {
             doc.setFontSize(7);
             doc.setFont('helvetica', 'normal');
             doc.setTextColor(150, 150, 165);
-            doc.text('Budgt Financial Report — Confidential', margin, pageH - 8);
-            doc.text(`Page ${i} of ${pageCount}`, pageW - margin, pageH - 8, { align: 'right' });
+            doc.text(t('Budgt Financial Report — Confidential'), margin, pageH - 8);
+            doc.text(`${t('Page')} ${i} ${t('of')} ${pageCount}`, pageW - margin, pageH - 8, { align: 'right' });
           }
 
-          doc.save(`budgt-report-${new Date().toISOString().split('T')[0]}.pdf`);
+          const pdfDataUri = doc.output('datauristring');
+          triggerFileDownload(pdfDataUri, `budgt-report-${new Date().toISOString().split('T')[0]}.pdf`, 'application/pdf');
           showToast(t('PDF report downloaded'), 'success');
         });
 
@@ -1124,34 +1173,34 @@ export function settingsView(container) {
           const wb = XLSX.utils.book_new();
 
           // Sheet 1: P&L
-          const plHeader = ['Period', 'Income', 'Expenses', 'Net Income'];
+          const plHeader = [t('Period'), t('Income'), t('Expenses'), t('Net Income')];
           const plData = [
-            ['Profit & Loss Statement'],
-            ['Generated: ' + new Date().toLocaleDateString(data.settings.locale || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
+            [t('Profit & Loss Statement')],
+            [`${t('Generated: ')}` + new Date().toLocaleDateString(data.settings.locale || 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })],
             [],
             plHeader,
             ...data.plRows.map(r => [r.month, r.income, r.expenses, r.net]),
             [],
-            ['TOTAL', data.totalIncome, data.totalExpenses, data.net]
+            [t('TOTAL'), data.totalIncome, data.totalExpenses, data.net]
           ];
           const plSheet = XLSX.utils.aoa_to_sheet(plData);
-          // Column widths
           plSheet['!cols'] = [{ wch: 14 }, { wch: 16 }, { wch: 16 }, { wch: 16 }];
-          XLSX.utils.book_append_sheet(wb, plSheet, 'Profit & Loss');
+          XLSX.utils.book_append_sheet(wb, plSheet, t('Profit & Loss'));
 
           // Sheet 2: Transactions
-          const txHeader = ['Date', 'Description', 'Category', 'Type', 'Amount', 'Account'];
+          const txHeader = [t('Date'), t('Description'), t('Category'), t('Type'), t('Amount'), t('Account')];
           const txData = [
-            ['Transaction Ledger'],
+            [t('Transaction Ledger')],
             [],
             txHeader,
             ...data.txRows.map(r => [r.date, r.description, r.category, r.type, r.amount, r.account])
           ];
           const txSheet = XLSX.utils.aoa_to_sheet(txData);
           txSheet['!cols'] = [{ wch: 14 }, { wch: 30 }, { wch: 18 }, { wch: 10 }, { wch: 14 }, { wch: 20 }];
-          XLSX.utils.book_append_sheet(wb, txSheet, 'Transactions');
+          XLSX.utils.book_append_sheet(wb, txSheet, t('Transactions'));
 
-          XLSX.writeFile(wb, `budgt-report-${new Date().toISOString().split('T')[0]}.xlsx`);
+          const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'base64' });
+          triggerFileDownload('data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + wbout, `budgt-report-${new Date().toISOString().split('T')[0]}.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           showToast(t('Excel report downloaded'), 'success');
         });
       }
@@ -1161,13 +1210,8 @@ export function settingsView(container) {
   // Export
   document.getElementById('set-export')?.addEventListener('click', () => {
     const data = Store.exportAll();
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `budgt-backup-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const jsonStr = JSON.stringify(data, null, 2);
+    triggerFileDownload(jsonStr, `budgt-backup-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
     showToast(t('Data exported'), 'success');
   });
 

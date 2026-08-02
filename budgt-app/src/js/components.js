@@ -215,7 +215,25 @@ export function showSheet(options) {
 }
 
 export function closeSheet() {
-  if (activeSheet) activeSheet.close();
+  if (activeSheet) {
+    try { activeSheet.close(); } catch(e) {}
+    activeSheet = null;
+  }
+  const root = document.getElementById('modal-root');
+  if (root) {
+    const sheets = root.querySelectorAll('.sheet');
+    const backdrops = root.querySelectorAll('.sheet-backdrop');
+    sheets.forEach(s => {
+      s.classList.remove('active');
+      s.style.pointerEvents = 'none';
+      setTimeout(() => s.remove(), 350);
+    });
+    backdrops.forEach(b => {
+      b.classList.remove('active');
+      b.style.pointerEvents = 'none';
+      setTimeout(() => b.remove(), 350);
+    });
+  }
 }
 
 // ─────────── Toast Notifications ───────────
@@ -271,8 +289,6 @@ export function showTransactionForm(existingTx = null) {
 
   const today = new Date().toISOString().split('T')[0];
 
-  // Capture the sheet's own close fn — more reliable than the module-level
-  // activeSheet variable which can be stale after synchronous re-renders.
   let closeModal = null;
 
   const formContent = (container) => {
@@ -375,16 +391,26 @@ export function showTransactionForm(existingTx = null) {
 
     // Save handler
     container.querySelector('#tx-save').addEventListener('click', () => {
-      const amount = parseFloat(container.querySelector('#tx-amount').value);
-      const description = container.querySelector('#tx-desc').value.trim();
+      const amountVal = container.querySelector('#tx-amount').value;
+      const amount = parseFloat(amountVal);
+      const description = (container.querySelector('#tx-desc').value || '').trim();
 
-      if (!amount || amount <= 0) {
+      if (isNaN(amount) || amount <= 0) {
         showToast(t('Please enter a valid amount'), 'error');
         return;
       }
       if (!description) {
         showToast(t('Please enter a description'), 'error');
         return;
+      }
+
+      let dateIso = new Date().toISOString();
+      const rawDate = container.querySelector('#tx-date').value;
+      if (rawDate) {
+        const parsed = new Date(rawDate);
+        if (!isNaN(parsed.getTime())) {
+          dateIso = parsed.toISOString();
+        }
       }
 
       const tx = {
@@ -394,31 +420,40 @@ export function showTransactionForm(existingTx = null) {
         description,
         categoryId: selectedType === 'transfer' ? null : container.querySelector('#tx-category').value || null,
         sourceAccountId: (selectedType === 'withdrawal' || selectedType === 'transfer')
-          ? container.querySelector('#tx-source').value : null,
+          ? container.querySelector('#tx-source').value || null : null,
         destAccountId: (selectedType === 'deposit' || selectedType === 'transfer')
-          ? container.querySelector('#tx-dest').value : null,
-        date: new Date(container.querySelector('#tx-date').value).toISOString(),
-        notes: container.querySelector('#tx-notes').value.trim(),
+          ? container.querySelector('#tx-dest').value || null : null,
+        date: dateIso,
+        notes: (container.querySelector('#tx-notes').value || '').trim(),
         tags: [],
         createdAt: existingTx?.createdAt || new Date().toISOString(),
       };
 
-      if (isEdit) {
-        // Delete old and add new (to recalculate balances)
-        State.deleteTransaction(existingTx.id);
-      }
-      State.addTransaction(tx);
-      // Use the directly-captured close reference; fall back to closeSheet() as safety net
+      // Close modal first so pop-up always closes
       (closeModal ?? closeSheet)();
-      showToast(isEdit ? t('Transaction updated') : t('Transaction added'), 'success');
+
+      try {
+        if (isEdit) {
+          State.deleteTransaction(existingTx.id);
+        }
+        State.addTransaction(tx);
+        showToast(isEdit ? t('Transaction updated') : t('Transaction added'), 'success');
+      } catch (err) {
+        console.error('Error saving transaction:', err);
+        showToast(t('Error saving transaction'), 'error');
+      }
     });
 
     // Delete handler
     if (isEdit) {
       container.querySelector('#tx-delete').addEventListener('click', () => {
-        State.deleteTransaction(existingTx.id);
         (closeModal ?? closeSheet)();
-        showToast(t('Transaction deleted'), 'success');
+        try {
+          State.deleteTransaction(existingTx.id);
+          showToast(t('Transaction deleted'), 'success');
+        } catch (err) {
+          console.error('Error deleting transaction:', err);
+        }
       });
     }
   };
@@ -427,6 +462,5 @@ export function showTransactionForm(existingTx = null) {
     title: isEdit ? t('Update Transaction') : t('Add Transaction'),
     content: formContent
   });
-  // Assign after showSheet returns — by the time the user taps a button, this is set
   closeModal = sheetResult?.close;
 }

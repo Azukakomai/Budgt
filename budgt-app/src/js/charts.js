@@ -13,6 +13,12 @@ const CHART_COLORS = [
   'oklch(0.75 0.13 110)',  // Lime
 ];
 
+function getCssVar(varName, fallback) {
+  if (typeof window === 'undefined') return fallback;
+  const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return val || fallback;
+}
+
 /**
  * Render a donut/ring chart
  */
@@ -37,11 +43,11 @@ export function renderDonutChart(canvas, data, opts = {}) {
     // Empty state ring
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = 'oklch(0.21 0.008 260)';
+    ctx.strokeStyle = getCssVar('--border-default', 'oklch(0.21 0.008 260)');
     ctx.lineWidth = lineWidth;
     ctx.stroke();
 
-    ctx.fillStyle = 'oklch(0.45 0.008 260)';
+    ctx.fillStyle = getCssVar('--text-tertiary', 'oklch(0.45 0.008 260)');
     ctx.font = '500 14px Inter, system-ui';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -68,14 +74,14 @@ export function renderDonutChart(canvas, data, opts = {}) {
 
   // Center text
   if (opts.centerText) {
-    ctx.fillStyle = 'oklch(0.93 0.005 260)';
+    ctx.fillStyle = getCssVar('--text-primary', 'oklch(0.93 0.005 260)');
     ctx.font = `700 ${opts.centerFontSize || 22}px Inter, system-ui`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(opts.centerText, cx, cy - 6);
 
     if (opts.centerSubtext) {
-      ctx.fillStyle = 'oklch(0.55 0.01 260)';
+      ctx.fillStyle = getCssVar('--text-secondary', 'oklch(0.55 0.01 260)');
       ctx.font = '500 11px Inter, system-ui';
       ctx.fillText(opts.centerSubtext, cx, cy + 14);
     }
@@ -120,11 +126,11 @@ export function renderBarChart(canvas, data, opts = {}) {
     ctx.lineTo(x + barWidth, y + barH);
     ctx.closePath();
 
-    ctx.fillStyle = d.color || opts.barColor || 'oklch(0.72 0.15 185)';
+    ctx.fillStyle = d.color || opts.barColor || getCssVar('--accent', 'oklch(0.72 0.15 185)');
     ctx.fill();
 
     // Label below
-    ctx.fillStyle = 'oklch(0.45 0.008 260)';
+    ctx.fillStyle = getCssVar('--text-tertiary', 'oklch(0.45 0.008 260)');
     ctx.font = '500 10px Inter, system-ui';
     ctx.textAlign = 'center';
     ctx.fillText(d.label, x + barWidth / 2, h - 8);

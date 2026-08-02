@@ -182,6 +182,7 @@ export const State = {
       locale: saved.locale || (saved.language === 'id' ? 'id-ID' : saved.language === 'ms' ? 'ms-MY' : 'en-US'),
       currencySymbol: saved.currencySymbol || '$',
       language: saved.language || 'en',
+      theme: saved.theme || 'dark',
       ...saved
     };
   },
@@ -194,6 +195,9 @@ export const State = {
       else if (updates.language === 'en') settings.locale = 'en-US';
     }
     Store.set('settings', settings);
+    if (updates.theme !== undefined) {
+      applyTheme(updates.theme);
+    }
     this.emit('settings', settings);
     return settings;
   },
@@ -267,3 +271,35 @@ export const State = {
       .reduce((sum, t) => sum + t.amount, 0);
   }
 };
+
+export function applyTheme(themeName) {
+  const theme = themeName || State.getSettings().theme || 'dark';
+  let resolved = theme;
+  if (theme === 'system') {
+    resolved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', resolved);
+
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', resolved === 'light' ? '#f4f4f6' : '#161820');
+  }
+
+  if (window.AndroidBridge && typeof window.AndroidBridge.setTheme === 'function') {
+    try {
+      window.AndroidBridge.setTheme(resolved === 'dark');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
+
+if (typeof window !== 'undefined' && window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const currentSetting = State.getSettings().theme;
+    if (currentSetting === 'system') {
+      applyTheme('system');
+    }
+  });
+}
+

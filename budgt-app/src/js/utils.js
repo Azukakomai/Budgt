@@ -16,17 +16,56 @@ export function formatCurrency(amount, opts = {}) {
   const settings = State.getSettings();
   const { showSign = false, compact = false } = opts;
 
-  const formatter = new Intl.NumberFormat(settings.locale || 'en-US', {
-    style: 'currency',
-    currency: settings.currency || 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    ...(compact && Math.abs(amount) >= 1000 ? { notation: 'compact' } : {})
-  });
+  const lang = settings.language || 'en';
+  const currency = settings.currency || 'USD';
+  const currencySymbol = settings.currencySymbol || '$';
+  const locale = settings.locale || (lang === 'id' ? 'id-ID' : lang === 'ms' ? 'ms-MY' : 'en-US');
+  const numAmount = Number(amount) || 0;
+  const absAmount = Math.abs(numAmount);
 
-  let formatted = formatter.format(Math.abs(amount));
-  if (showSign && amount > 0) formatted = '+' + formatted;
-  if (amount < 0) formatted = '-' + formatted;
+  let formatted = '';
+
+  if (compact && absAmount >= 1000) {
+    if (absAmount >= 1000000) {
+      const millions = absAmount / 1000000;
+      const formattedNum = new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(millions);
+
+      const suffix = (lang === 'id' || lang === 'ms') ? 'Jt' : 'M';
+      if (currencySymbol === '$' || currencySymbol === '£' || currencySymbol === '€' || currencySymbol === '¥') {
+        formatted = `${currencySymbol}${formattedNum}${suffix}`;
+      } else {
+        formatted = `${currencySymbol} ${formattedNum} ${suffix}`;
+      }
+    } else {
+      const thousands = absAmount / 1000;
+      const formattedNum = new Intl.NumberFormat(locale, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(thousands);
+
+      const suffix = (lang === 'id' || lang === 'ms') ? 'rb' : 'K';
+      if (currencySymbol === '$' || currencySymbol === '£' || currencySymbol === '€' || currencySymbol === '¥') {
+        formatted = `${currencySymbol}${formattedNum}${suffix}`;
+      } else {
+        formatted = `${currencySymbol} ${formattedNum} ${suffix}`;
+      }
+    }
+  } else {
+    const fracDigits = (currency === 'IDR' || currency === 'JPY') ? 0 : 2;
+    const formatter = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: fracDigits,
+      maximumFractionDigits: fracDigits
+    });
+    formatted = formatter.format(absAmount);
+  }
+
+  if (showSign && numAmount > 0) formatted = '+' + formatted;
+  if (numAmount < 0) formatted = '-' + formatted;
 
   return formatted;
 }
@@ -127,6 +166,48 @@ export function debounce(fn, ms = 300) {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), ms);
   };
+}
+
+// ── Universal File Download (Android Native Bridge + Browser Fallback) ──
+export function triggerFileDownload(data, fileName, mimeType) {
+  if (window.AndroidBridge && typeof window.AndroidBridge.downloadFile === 'function') {
+    if (data instanceof Blob) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result;
+        const base64 = result.substring(result.indexOf(',') + 1);
+        window.AndroidBridge.downloadFile(base64, fileName, mimeType);
+      };
+      reader.readAsDataURL(data);
+      return;
+    }
+    let base64Str = data;
+    if (typeof data === 'string' && data.startsWith('data:')) {
+      base64Str = data.substring(data.indexOf(',') + 1);
+    }
+    window.AndroidBridge.downloadFile(base64Str, fileName, mimeType);
+    return;
+  }
+
+  let url;
+  if (data instanceof Blob) {
+    url = URL.createObjectURL(data);
+  } else if (typeof data === 'string' && data.startsWith('data:')) {
+    url = data;
+  } else {
+    const blob = new Blob([data], { type: mimeType });
+    url = URL.createObjectURL(blob);
+  }
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  if (url.startsWith('blob:')) {
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 }
 
 // ── Sanitize HTML ──

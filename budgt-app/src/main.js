@@ -3,6 +3,9 @@
    ════════════════════════════════════════════════════ */
 
 // Styles
+import '@phosphor-icons/web/regular/style.css';
+import '@phosphor-icons/web/bold/style.css';
+import '@phosphor-icons/web/fill/style.css';
 import './css/tokens.css';
 import './css/base.css';
 import './css/components.css';
@@ -12,6 +15,7 @@ import './css/views.css';
 import { Router } from './js/router.js';
 import { seedData } from './js/seed.js';
 import { renderNav } from './js/components.js';
+import { applyTheme } from './js/state.js';
 
 // Views
 import { dashboardView } from './views/dashboard.js';
@@ -22,6 +26,9 @@ import { moreView, piggybanksView, billsView, reportsView, categoriesView, setti
 
 // ── Initialize ──
 function init() {
+  // Apply theme from saved settings
+  applyTheme();
+
   // Seed default data on first run
   seedData();
 

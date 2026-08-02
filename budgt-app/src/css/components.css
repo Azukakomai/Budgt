@@ -212,11 +212,10 @@
   top: 0;
   left: 0;
   right: 0;
-  height: var(--header-height);
-  padding: 0 var(--space-4);
-  padding-top: var(--safe-top);
+  height: calc(var(--header-height) + var(--safe-top));
+  padding: calc(var(--safe-top) + var(--space-4)) var(--space-4) var(--space-3) var(--space-4);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   background: var(--bg-base);
   border-bottom: 1px solid var(--border-subtle);
@@ -239,74 +238,108 @@
 
 /* ─────────── Bottom Navigation ─────────── */
 
+/* Borderless top right header button */
+.header-btn-borderless {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--text-primary);
+  font-size: 24px;
+  padding: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-spring);
+}
+
+.header-btn-borderless:active {
+  transform: scale(0.92);
+  color: var(--accent);
+}
+
+/* ─────────── Bottom Navigation (Floating Pill Bar) ─────────── */
+
 .bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: calc(var(--safe-bottom) + var(--space-6));
   left: 0;
   right: 0;
-  height: calc(var(--nav-height) + var(--safe-bottom));
-  padding-bottom: var(--safe-bottom);
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 var(--space-4);
+  pointer-events: none;
+  z-index: var(--z-nav);
+}
+
+.nav-pill {
+  pointer-events: auto;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  z-index: var(--z-nav);
+  width: 100%;
+  max-width: calc(var(--content-max-width) - 24px);
+  height: 64px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 0 var(--space-3);
+  box-shadow: var(--shadow-sheet);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .nav-item {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: var(--space-1) var(--space-3);
-  font-size: 10px;
-  font-weight: var(--weight-medium);
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
   color: var(--text-tertiary);
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-spring);
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  min-width: 56px;
 }
 
 .nav-item i {
-  font-size: 22px;
+  font-size: 24px;
   transition: transform var(--duration-fast) var(--ease-out);
 }
 
 .nav-item.active {
   color: var(--accent);
+  background: var(--accent-subtle);
 }
 
 .nav-item.active i {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
-/* ─────────── FAB ─────────── */
-
-.fab {
-  position: fixed;
-  bottom: calc(var(--nav-height) + var(--safe-bottom) + var(--space-4));
-  right: var(--space-4);
-  width: 56px;
-  height: 56px;
-  background: var(--accent);
-  color: var(--text-on-accent);
+/* Central Add FAB Button embedded inside navbar pill */
+.nav-fab-btn {
+  pointer-events: auto;
+  width: 46px;
+  height: 46px;
   border-radius: var(--radius-full);
+  background: var(--accent-muted);
+  color: var(--accent);
+  border: 1px solid var(--accent-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  box-shadow: var(--shadow-lg);
-  z-index: var(--z-fab);
+  font-size: 22px;
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-spring),
-              background var(--duration-fast) var(--ease-out);
+  transition: transform var(--duration-fast) var(--ease-spring), background var(--duration-fast) var(--ease-out);
+  margin: 0 var(--space-1);
+  box-shadow: var(--shadow-sm);
 }
 
-.fab:hover {
-  background: var(--accent-hover);
+.nav-fab-btn:active {
+  transform: scale(0.92);
 }
 
 .fab:active {
