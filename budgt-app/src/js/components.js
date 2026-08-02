@@ -164,16 +164,23 @@ export function showSheet(options) {
     sheet.classList.add('active');
   });
 
+  let isClosed = false;
   // Close handler
   const close = () => {
+    if (isClosed) return;
+    isClosed = true;
     sheet.classList.remove('active');
     backdrop.classList.remove('active');
+    sheet.style.pointerEvents = 'none';
+    backdrop.style.pointerEvents = 'none';
     setTimeout(() => {
-      backdrop.remove();
-      sheet.remove();
-      activeSheet = null;
+      try { backdrop.remove(); } catch (e) {}
+      try { sheet.remove(); } catch (e) {}
+      if (activeSheet?.sheet === sheet) {
+        activeSheet = null;
+      }
       if (onClose) onClose();
-    }, 350);
+    }, 200);
   };
 
   backdrop.addEventListener('click', close);
@@ -216,7 +223,7 @@ export function showSheet(options) {
 
 export function closeSheet() {
   if (activeSheet) {
-    try { activeSheet.close(); } catch(e) {}
+    try { activeSheet.close(); } catch (e) {}
     activeSheet = null;
   }
   const root = document.getElementById('modal-root');
@@ -226,12 +233,14 @@ export function closeSheet() {
     sheets.forEach(s => {
       s.classList.remove('active');
       s.style.pointerEvents = 'none';
-      setTimeout(() => s.remove(), 350);
+      s.style.display = 'none';
+      try { s.remove(); } catch (e) {}
     });
     backdrops.forEach(b => {
       b.classList.remove('active');
       b.style.pointerEvents = 'none';
-      setTimeout(() => b.remove(), 350);
+      b.style.display = 'none';
+      try { b.remove(); } catch (e) {}
     });
   }
 }
