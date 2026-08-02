@@ -5,15 +5,15 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Letter B (Inter ExtraBold 800 Typographic Vector Path) -->
+    <!-- Letter B (Centered for 108dp Adaptive Icon Safe Zone) -->
     <path
         android:fillColor="#21252D"
         android:fillType="evenOdd"
-        android:pathData="M27,26 H47 C53.5,26 57.5,29.5 57.5,36 C57.5,41.5 53.5,46 47,47.5 C54.5,49 60,53.5 60,63.5 C60,72.5 54.5,80 45,80 H27 V26 Z M38,34 H46 C48.5,34 50,35.2 50,37 C50,38.8 48.5,40 H38 V34 Z M38,55.5 H47 C50,55.5 52,57 52,60 C52,63 50,65.5 47,65.5 H38 V55.5 Z" />
+        android:pathData="M32,32 H48 C54,32 58,35.5 58,41 C58,45.5 54,49 48,50.2 C55,51.5 59.5,55.5 59.5,64 C59.5,71.5 55,76 46,76 H32 V32 Z M40,39.5 V46 H47 C49,46 50.5,44.8 50.5,42.8 C50.5,40.8 49,39.5 47,39.5 H40 Z M40,56.5 V68.5 H47 C49.5,68.5 51.5,67 51.5,62.5 C51.5,58 49.5,56.5 47,56.5 H40 Z" />
 
     <!-- Emerald Green Triangle -->
     <path
         android:fillColor="#05C48A"
-        android:pathData="M74,30 L66,50 H82 Z" />
+        android:pathData="M75,36 L66,54 H84 Z" />
 
 </vector>

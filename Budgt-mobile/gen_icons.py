@@ -6,7 +6,8 @@ sizes = {
     'mipmap-hdpi': 72,
     'mipmap-xhdpi': 96,
     'mipmap-xxhdpi': 144,
-    'mipmap-xxxhdpi': 192
+    'mipmap-xxxhdpi': 192,
+    'drawable': 512
 }
 
 base_dir = r"c:\Users\User\OneDrive\Documents\Programming\Budgt\Budgt-mobile\app\src\main\res"
@@ -19,13 +20,17 @@ for folder, size in sizes.items():
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
     
-    # Squircle background
+    # Off-white Squircle background (#F4F5F7)
     radius = int(size * 0.22)
     draw.rounded_rectangle([0, 0, size, size], radius=radius, fill=(244, 245, 247, 255))
     
-    font_size = int(size * 0.65)
+    font_size = int(size * 0.58)
     font = None
-    font_paths = ["C:\\Windows\\Fonts\\arialbd.ttf", "C:\\Windows\\Fonts\\segoeuib.ttf", "C:\\Windows\\Fonts\\calibrib.ttf"]
+    font_paths = [
+        "C:\\Windows\\Fonts\\arialbd.ttf",
+        "C:\\Windows\\Fonts\\segoeuib.ttf",
+        "C:\\Windows\\Fonts\\calibrib.ttf"
+    ]
     for fp in font_paths:
         if os.path.exists(fp):
             try:
@@ -36,14 +41,16 @@ for folder, size in sizes.items():
     if font is None:
         font = ImageFont.load_default()
         
-    bx = int(size * 0.38)
+    # Draw letter B
+    bx = int(size * 0.40)
     by = int(size * 0.50)
     draw.text((bx, by), "B", fill=(33, 37, 45, 255), font=font, anchor="mm")
     
-    tx = int(size * 0.74)
+    # Draw Emerald Green Triangle
+    tx = int(size * 0.72)
     ty = int(size * 0.44)
-    tw = int(size * 0.10)
-    th = int(size * 0.12)
+    tw = int(size * 0.11)
+    th = int(size * 0.13)
     triangle = [(tx, ty - th), (tx - tw, ty + th), (tx + tw, ty + th)]
     draw.polygon(triangle, fill=(5, 196, 138, 255))
     
