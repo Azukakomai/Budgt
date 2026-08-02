@@ -1,0 +1,652 @@
+% ============================================================
+%  BUDGT — Project Handover Document
+%  Prepared: August 2026
+% ============================================================
+\documentclass[12pt, a4paper]{article}
+
+% ── Packages ────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{mdframed}
+\usepackage{tcolorbox}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{amsmath}
+
+% ── Colour Palette ──────────────────────────────────────────
+\definecolor{budgt-blue}{HTML}{3B82F6}
+\definecolor{budgt-dark}{HTML}{161820}
+\definecolor{budgt-mid}{HTML}{1E2030}
+\definecolor{budgt-accent}{HTML}{6366F1}
+\definecolor{budgt-green}{HTML}{22C55E}
+\definecolor{budgt-red}{HTML}{EF4444}
+\definecolor{budgt-gray}{HTML}{94A3B8}
+\definecolor{budgt-light}{HTML}{F1F5F9}
+\definecolor{code-bg}{HTML}{F8FAFC}
+\definecolor{note-bg}{HTML}{EFF6FF}
+\definecolor{warn-bg}{HTML}{FFF7ED}
+\definecolor{caution-bg}{HTML}{FFF1F2}
+
+% ── Hyperref Setup ──────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=budgt-accent,
+    urlcolor=budgt-blue,
+    citecolor=budgt-blue,
+    pdftitle={BUDGT Project Handover Document},
+    pdfauthor={Budgt Development Team},
+    pdfsubject={Project Handover},
+}
+
+% ── Section Title Styling ───────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{budgt-accent}}
+  {\thesection}{1em}{}[\color{budgt-gray}\titlerule]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{budgt-dark}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\itshape\color{budgt-dark}}
+  {\thesubsubsection}{1em}{}
+
+% ── Code Listing Style ──────────────────────────────────────
+\lstdefinestyle{budgtstyle}{
+  backgroundcolor=\color{code-bg},
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{budgt-gray!40},
+  xleftmargin=10pt,
+  xrightmargin=10pt,
+  aboveskip=6pt,
+  belowskip=6pt,
+  numbers=left,
+  numberstyle=\tiny\color{budgt-gray},
+  numbersep=5pt,
+  keywordstyle=\color{budgt-accent}\bfseries,
+  commentstyle=\color{budgt-gray}\itshape,
+  stringstyle=\color{budgt-green},
+}
+\lstset{style=budgtstyle}
+
+% ── Custom Boxes ────────────────────────────────────────────
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{notebox}{
+  colback=note-bg, colframe=budgt-blue,
+  boxrule=0.5pt, arc=4pt, left=8pt, right=8pt,
+  title={\small\bfseries\color{budgt-blue} Note},
+  fonttitle=\bfseries, coltitle=budgt-blue,
+}
+
+\newtcolorbox{warnbox}{
+  colback=warn-bg, colframe=orange,
+  boxrule=0.5pt, arc=4pt, left=8pt, right=8pt,
+  title={\small\bfseries\color{orange} Warning},
+  fonttitle=\bfseries, coltitle=orange,
+}
+
+\newtcolorbox{cautionbox}{
+  colback=caution-bg, colframe=budgt-red,
+  boxrule=0.5pt, arc=4pt, left=8pt, right=8pt,
+  title={\small\bfseries\color{budgt-red} Caution},
+  fonttitle=\bfseries, coltitle=budgt-red,
+}
+
+% ── Header / Footer ─────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{budgt-gray} BUDGT --- Project Handover Document}
+\fancyhead[R]{\small\color{budgt-gray} August 2026}
+\fancyfoot[C]{\small\color{budgt-gray}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{budgt-gray!40}\leaders\hrule height \headrulewidth\hfill}}
+
+% ── Column type ─────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ── Document ────────────────────────────────────────────────
+\begin{document}
+
+% ── Title Page ──────────────────────────────────────────────
+\begin{titlepage}
+  \pagecolor{budgt-dark}
+  \color{white}
+  \vspace*{3cm}
+  \begin{center}
+    {\fontsize{52}{60}\selectfont\bfseries\color{budgt-accent} BUDGT}\\[0.4cm]
+    {\Large\color{budgt-gray} Personal Finance Management Application}\\[0.2cm]
+    {\large\color{white} Project Handover Document}\\[2.5cm]
+    \noindent\rule{8cm}{0.4pt}\\[0.8cm]
+    {\normalsize\color{budgt-gray}
+      \textbf{Version:} 1.0.6 \quad\textbf{Version Code:} 7\\[0.3cm]
+      \textbf{Date:} August 2026\\[0.3cm]
+      \textbf{Platforms:} Android \textbullet{} iOS \textbullet{} Progressive Web App\\[0.3cm]
+      \textbf{Confidentiality:} Internal Use
+    }\\[2cm]
+    \noindent\rule{8cm}{0.4pt}\\[0.8cm]
+    {\small\color{budgt-gray}
+      This document is intended for the incoming development team or project stakeholders.\\
+      It provides a complete technical, architectural, and operational overview\\
+      of the BUDGT application as of the handover date.
+    }
+  \end{center}
+  \vfill
+\end{titlepage}
+\nopagecolor
+
+% ── Table of Contents ───────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Project Overview}
+% ════════════════════════════════════════════════════════════
+
+\textbf{BUDGT} is a sleek, privacy-focused, and high-performance personal finance tracking application designed with a mobile-first philosophy. It is available across three platforms:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Android Native App} --- a Kotlin/WebView shell wrapping the bundled web engine, distributed as a debug APK (\texttt{Budgt.apk}, Version 1.0.6, versionCode~7).
+  \item \textbf{iOS Native App} --- a pure SwiftUI application targeting iOS 16/17+, opened and built via Xcode.
+  \item \textbf{Progressive Web App (PWA)} --- a Vanilla JavaScript Single-Page Application (SPA) built with Vite 8, installable from any modern browser.
+\end{itemize}
+
+All financial data is stored \textbf{100\% client-side}. There is no remote backend, no cloud database, and no external analytics. User data never leaves the device.
+
+\subsection{Core Feature Set}
+
+\begin{longtable}{L{4.5cm} L{10cm}}
+  \toprule
+  \textbf{Feature} & \textbf{Description} \\
+  \midrule
+  \endhead
+  Real-Time Dashboard & Net worth overview, monthly cash flow (income vs.\ expense), category spending charts, and a quick transaction feed. \\[4pt]
+  Multi-Account Ledger & Supports Asset accounts (Bank, Cash, Savings) and Liability accounts (Credit Card, Loans). Comprehensive logging of Withdrawals, Deposits, and Transfers with auto-reconciliation. \\[4pt]
+  Budget Limits & Category-level monthly spending caps with visual progress bars and threshold warnings. \\[4pt]
+  Piggy Banks & Dedicated savings goal tracker with target amounts, progress milestones, and linked accounts. \\[4pt]
+  Scheduled Bills & Recurring bill tracker with due-date monitoring, auto-pay flags, and payment history. \\[4pt]
+  Financial Reports & In-browser Profit \& Loss (P\&L) PDF export, Excel/CSV ledger dump, and full JSON backup/restore. \\[4pt]
+  Internationalization & Multi-currency (USD, IDR, MYR, EUR, GBP, JPY, etc.) with regional number formatting; multi-language (English, Indonesian, Malay). \\[4pt]
+  PWA / Offline & Service Worker caches all assets; app is installable to the home screen and runs without internet. \\
+  \bottomrule
+\end{longtable}
+
+% ════════════════════════════════════════════════════════════
+\section{Repository Structure}
+% ════════════════════════════════════════════════════════════
+
+The monorepo is organized as follows:
+
+\begin{lstlisting}[language=bash, caption={Top-Level Repository Layout}]
+Budgt/
+|-- budgt-app/           # Vite SPA (Web + PWA core engine)
+|   |-- public/
+|   |   `-- sw.js        # Service Worker (offline caching)
+|   |-- src/
+|   |   |-- css/         # Design token system
+|   |   |-- js/          # Core modules (store, state, router, ...)
+|   |   |-- views/       # SPA page views
+|   |   `-- main.js      # Bootstrap entry point
+|   `-- package.json
+|
+|-- Budgt-mobile/        # Android Kotlin/WebView shell
+|   `-- app/src/main/
+|       |-- java/com/example/budgt/MainActivity.kt
+|       `-- assets/      # Bundled web app assets
+|
+|-- Budgt-ios/           # Native SwiftUI iOS app
+|   |-- Budgt/
+|   |   |-- App/         # App entry point & Info.plist
+|   |   |-- Models/      # Data models (Swift structs)
+|   |   |-- Services/    # DataStore (UserDefaults JSON)
+|   |   |-- Utilities/   # Currency & color helpers
+|   |   `-- Views/       # SwiftUI view files
+|   `-- Budgt.xcodeproj/
+|
+|-- dist/                # Production web build output
+|-- ARCHITECTURE.md      # Technical architecture deep-dive
+`-- README.MD            # Project overview & download links
+\end{lstlisting}
+
+% ════════════════════════════════════════════════════════════
+\section{Technology Stack}
+% ════════════════════════════════════════════════════════════
+
+\begin{longtable}{L{3.5cm} L{4.5cm} L{6.5cm}}
+  \toprule
+  \textbf{Category} & \textbf{Technology} & \textbf{Purpose} \\
+  \midrule
+  \endhead
+  Build \& Tooling & Vite 8 & Lightning-fast HMR dev server and ES module bundler. \\[4pt]
+  Core Web Arch. & Vanilla ES Modules (JS) & Framework-less SPA --- zero bundle bloat, instant load. \\[4pt]
+  Styling & Vanilla CSS3 + Design Tokens & Tokenized CSS system (\texttt{tokens.css}, \texttt{base.css}, \texttt{components.css}, \texttt{views.css}); glassmorphism, dark/light mode. \\[4pt]
+  Icons & Phosphor Icons & Lightweight vector icon system across navigation \& categories. \\[4pt]
+  Storage (Web) & HTML5 \texttt{localStorage} & Client-side JSON document store, prefixed \texttt{budgt\_*}. \\[4pt]
+  Storage (iOS) & \texttt{UserDefaults} + JSON & Mirrors the web storage model using Swift Codable structs. \\[4pt]
+  PDF Export & \texttt{jsPDF} + \texttt{jspdf-autotable} & In-browser P\&L PDF statement generation. \\[4pt]
+  Excel Export & \texttt{xlsx} & In-browser spreadsheet export of the transaction ledger. \\[4pt]
+  PWA / Offline & Service Worker (\texttt{sw.js}) & Offline asset caching and home screen installability. \\[4pt]
+  Android Shell & Kotlin + \texttt{WebView} & Lightweight native Android activity hosting the web engine via \texttt{WebViewAssetLoader}. \\[4pt]
+  iOS Shell & SwiftUI (Swift 5.9+) & Native iOS app targeting iOS 16/17+ with Swift Charts. \\
+  \bottomrule
+\end{longtable}
+
+% ════════════════════════════════════════════════════════════
+\section{System Architecture}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Client-Side Storage Architecture}
+
+BUDGT does \textbf{not} use a remote server database. All data is stored in the browser's \texttt{localStorage} (Web/Android) or \texttt{UserDefaults} (iOS). The web engine uses a three-tier architecture:
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item \textbf{UI Layer} (Views) --- Renders data and dispatches user actions.
+  \item \textbf{Reactive State Layer} (\texttt{state.js}) --- Manages an in-memory state cache, performs balance calculations, and emits change events via a Pub/Sub pattern.
+  \item \textbf{Persistence Layer} (\texttt{store.js}) --- Serializes/deserializes JSON objects to/from \texttt{localStorage} with the \texttt{budgt\_} key prefix.
+\end{enumerate}
+
+\subsection{localStorage Data Collections}
+
+\begin{longtable}{L{3.8cm} L{10.7cm}}
+  \toprule
+  \textbf{Key} & \textbf{Schema \& Description} \\
+  \midrule
+  \endhead
+  \texttt{budgt\_transactions} & Array of transaction records: \texttt{\{id, type, amount, description, categoryId, sourceAccountId, destAccountId, date, notes, tags, createdAt\}}. \texttt{type} is one of \texttt{withdrawal | deposit | transfer}. \\[4pt]
+  \texttt{budgt\_accounts} & Array of financial accounts: \texttt{\{id, name, type, balance, currency, icon, color, createdAt\}}. \texttt{type} is one of \texttt{asset | liability}. \\[4pt]
+  \texttt{budgt\_categories} & Expense/income categories: \texttt{\{id, name, icon, color, type\}}. \texttt{type} is \texttt{expense | income}. \\[4pt]
+  \texttt{budgt\_budgets} & Category spending caps: \texttt{\{id, categoryId, amount, period, startDate\}}. \\[4pt]
+  \texttt{budgt\_piggybanks} & Savings goals: \texttt{\{id, name, targetAmount, currentAmount, icon, targetDate, accountId\}}. \\[4pt]
+  \texttt{budgt\_bills} & Recurring bills: \texttt{\{id, name, amount, categoryId, frequency, nextDueDate, autoPay, lastPaidDate\}}. \\[4pt]
+  \texttt{budgt\_settings} & User preferences: \texttt{\{currency, locale, currencySymbol\}}. \\[4pt]
+  \texttt{budgt\_seeded} & Boolean flag --- prevents re-seeding demo data on subsequent app launches. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Automatic Balance Reconciliation}
+
+When a transaction is created or deleted, the following sequence is triggered automatically:
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item \texttt{State.addTransaction(tx)} writes the record to \texttt{budgt\_transactions}.
+  \item \texttt{\_applyTransactionToAccounts()} updates the corresponding \texttt{balance} field in \texttt{budgt\_accounts}.
+  \item Events \texttt{emit('transactions')} and \texttt{emit('accounts')} notify all UI subscribers to re-render immediately.
+\end{enumerate}
+
+\subsection{Android Native Bridge}
+
+The Android shell exposes a JavaScript interface called \texttt{AndroidBridge} that enables the web engine to interact with native Android features:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{\texttt{setTheme(isDark: Boolean)}} --- Synchronizes the native status bar and navigation bar colours with the web app's active dark/light theme.
+  \item \textbf{\texttt{downloadFile(base64Data, fileName, mimeType)}} --- Saves in-browser generated files (PDFs, Excel sheets) to the device's \texttt{Downloads} directory using \texttt{MediaStore} (Android 10+) or legacy file I/O.
+\end{itemize}
+
+Assets are served via \texttt{WebViewAssetLoader} over the \texttt{https://appassets.androidplatform.net/} pseudo-domain, bypassing file:// restrictions and enabling \texttt{localStorage} access.
+
+% ════════════════════════════════════════════════════════════
+\section{Key Source Files Reference}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Web Application (\texttt{budgt-app/src/js/})}
+
+\begin{longtable}{L{3.5cm} L{11cm}}
+  \toprule
+  \textbf{File} & \textbf{Responsibility} \\
+  \midrule
+  \endhead
+  \texttt{store.js} & \texttt{localStorage} CRUD driver. Provides \texttt{Store.get(key)}, \texttt{Store.set(key, value)}, and JSON import/export. All collection keys are prefixed \texttt{budgt\_}. \\[4pt]
+  \texttt{state.js} & Reactive Pub/Sub state manager. Calculates derived values (net worth, monthly totals). Exposes \texttt{State.addTransaction()}, \texttt{State.deleteTransaction()}, etc. \\[4pt]
+  \texttt{router.js} & Client-side hash router (\texttt{\#dashboard}, \texttt{\#transactions}, etc.) for SPA navigation without page reloads. \\[4pt]
+  \texttt{seed.js} & Seeds default categories, accounts, and demo transactions on first launch. Also exports \texttt{resetToZero()} to clear all data while preserving category definitions. \\[4pt]
+  \texttt{i18n.js} & Multi-language string dictionary (en/id/ms) and currency formatting helpers for regional number display (\texttt{\$1M}, \texttt{Rp 1 Jt}). \\[4pt]
+  \texttt{charts.js} & SVG and Canvas chart renderers for category pie charts and monthly trend bar charts on the dashboard. \\[4pt]
+  \texttt{components.js} & Shared reusable UI components: navigation bar, modal dialogs, and header. \\[4pt]
+  \texttt{utils.js} & Utility helpers: date formatting, currency parsing, \texttt{generateId()}, and DOM manipulation helpers. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Web App Views (\texttt{budgt-app/src/views/})}
+
+\begin{longtable}{L{3.8cm} L{10.7cm}}
+  \toprule
+  \textbf{File} & \textbf{View Description} \\
+  \midrule
+  \endhead
+  \texttt{dashboard.js} & Main overview screen. Displays net worth card, monthly income/expense summary, category spending chart, and recent transaction feed. \\[4pt]
+  \texttt{transactions.js} & Full transaction ledger with search, date/category filters, and an Add Transaction modal supporting withdrawals, deposits, and transfers. \\[4pt]
+  \texttt{accounts.js} & Displays net worth breakdown, asset and liability account list, and manual balance editing. \\[4pt]
+  \texttt{budgets.js} & Category spending cap management with circular progress indicators and colour-coded threshold warnings. \\[4pt]
+  \texttt{more.js} & Aggregated hub for Reports, Settings, Categories, Piggy Banks, and Bills management. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{CSS Design System (\texttt{budgt-app/src/css/})}
+
+\begin{longtable}{L{3.8cm} L{10.7cm}}
+  \toprule
+  \textbf{File} & \textbf{Contents} \\
+  \midrule
+  \endhead
+  \texttt{tokens.css} & CSS custom property definitions: colour palettes (dark \& light mode), typography scale, spacing units, border radius, and shadow presets. \\[4pt]
+  \texttt{base.css} & CSS reset, global layout grids, body defaults, and structural scaffolding. \\[4pt]
+  \texttt{components.css} & Styled components: buttons, inputs, modal dialogs, cards, progress bars, and tab bars. \\[4pt]
+  \texttt{views.css} & View-specific responsive styles scoped to individual SPA pages. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{iOS Native App (\texttt{Budgt-ios/Budgt/})}
+
+\begin{longtable}{L{4.5cm} L{10cm}}
+  \toprule
+  \textbf{File} & \textbf{Responsibility} \\
+  \midrule
+  \endhead
+  \texttt{App/BudgtApp.swift} & SwiftUI \texttt{@main} entry point. Initialises the \texttt{DataStore} environment object and presents \texttt{MainTabView}. \\[4pt]
+  \texttt{Models/Models.swift} & Swift \texttt{Codable} data model structs: \texttt{Transaction}, \texttt{Account}, \texttt{Category}, \texttt{Budget}, \texttt{PiggyBank}, \texttt{Bill}. \\[4pt]
+  \texttt{Services/DataStore.swift} & Reactive \texttt{ObservableObject} state engine. Persists all collections to \texttt{UserDefaults} as JSON, mirrors the web \texttt{state.js} pattern. \\[4pt]
+  \texttt{Utilities/CurrencyFormatter.swift} & Currency formatting utilities and hex colour to \texttt{SwiftUI.Color} conversion. \\[4pt]
+  \texttt{Views/MainTabView.swift} & Native bottom tab bar navigation container (Dashboard, Transactions, Accounts, Budgets, More). \\[4pt]
+  \texttt{Views/DashboardView.swift} & Net worth, cash flow summary, and Swift Charts visualisations. \\[4pt]
+  \texttt{Views/TransactionsView.swift} & Transaction ledger with search, filtering, and swipe-to-delete. \\[4pt]
+  \texttt{Views/AccountsView.swift} & Asset and Liability account management with dynamic balance recalculation. \\[4pt]
+  \texttt{Views/BudgetsView.swift} & Category budget limits with progress indicators and Piggy Bank savings goals. \\[4pt]
+  \texttt{Views/BillsView.swift} & Scheduled recurring bills with due dates and auto-pay tagging. \\[4pt]
+  \texttt{Views/SettingsView.swift} & Currency picker and full data reset functionality. \\
+  \bottomrule
+\end{longtable}
+
+% ════════════════════════════════════════════════════════════
+\section{Development Environment Setup}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Prerequisites}
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Node.js} v18+ and \textbf{npm} (for the web app)
+  \item \textbf{Android Studio} (Hedgehog or newer) with Android SDK installed (for Android build)
+  \item \textbf{Java 17+} (bundled with Android Studio JBR)
+  \item \textbf{Xcode 15+} on macOS (for iOS build; macOS only)
+  \item \textbf{Git} for version control
+\end{itemize}
+
+\subsection{Web App --- Local Development}
+
+\begin{lstlisting}[language=bash, caption={Starting the Vite Dev Server}]
+# Clone the repository
+git clone <repository-url>
+cd Budgt/budgt-app
+
+# Install dependencies
+npm install
+
+# Start local dev server with Hot Module Replacement
+npm run dev
+# App will be available at http://localhost:5173
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption={Building a Production Bundle}]
+# Outputs minified assets to budgt-app/dist/
+npm run build
+\end{lstlisting}
+
+\subsection{Android App --- Building from Source}
+
+\begin{warnbox}
+Set \texttt{JAVA\_HOME} to the Android Studio bundled JBR before running Gradle, otherwise the build may fail with JVM version errors.
+\end{warnbox}
+
+\begin{lstlisting}[language=bash, caption={Building the Android APK (Windows)}]
+cd Budgt/Budgt-mobile
+set JAVA_HOME=C:\Program Files\Android\Android Studio\jbr
+.\gradlew.bat assembleDebug
+# Output: app/build/outputs/apk/debug/app-debug.apk
+\end{lstlisting}
+
+\begin{notebox}
+The Android app bundles the \textbf{pre-built web app} as assets. After making changes in \texttt{budgt-app/}, run \texttt{npm run build} and copy the \texttt{dist/} output to \texttt{Budgt-mobile/app/src/main/assets/} before rebuilding the APK.
+\end{notebox}
+
+\subsection{iOS App --- Running in Xcode}
+
+\begin{lstlisting}[language=bash, caption={Opening the Xcode Project}]
+cd Budgt/Budgt-ios
+open Budgt.xcodeproj
+\end{lstlisting}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item Select a simulator (e.g.\ \textbf{iPhone 15 Pro}) or a physical device from the scheme picker.
+  \item Press \textbf{Cmd+R} to build and run.
+  \item No additional dependencies --- the iOS app is entirely self-contained in Swift.
+\end{enumerate}
+
+% ════════════════════════════════════════════════════════════
+\section{Data Management}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Seed \& Reset}
+
+On the very first launch of the web/Android app, \texttt{seedData()} in \texttt{seed.js} runs automatically and populates:
+\begin{itemize}[leftmargin=1.5em]
+  \item 12 default categories (10 expense, 2 income)
+  \item 3 default accounts (Checking, Savings, Cash) with demo balances
+  \item 14 demo transactions for the current month
+  \item 5 default budgets, 3 piggy banks, and 4 recurring bills
+  \item Default settings: \texttt{USD / en-US}
+\end{itemize}
+
+A boolean flag \texttt{budgt\_seeded} is set to \texttt{true} afterwards to prevent re-seeding. Calling \texttt{resetToZero()} clears all transaction/budget/bill data while preserving category definitions and resetting account balances to zero.
+
+\subsection{Backup \& Restore}
+
+Users can export all data as a \textbf{JSON file} via \textbf{Settings $\rightarrow$ Backup \& Restore}. The JSON file can be re-imported into any browser or Android device to fully restore the dataset. This is the primary data migration mechanism between devices.
+
+\subsection{Upgrading to Cloud Sync (Future)}
+
+Because all storage logic is isolated inside \texttt{store.js}, connecting to a cloud backend (e.g.\ \textbf{Supabase} or \textbf{Firebase}) requires only:
+\begin{enumerate}[leftmargin=1.5em]
+  \item Replacing \texttt{localStorage} read/write calls inside \texttt{store.js} with remote API calls.
+  \item Adding an authentication layer (OAuth or email/password) so data is user-scoped.
+\end{enumerate}
+No changes to the UI views or state manager are needed.
+
+% ════════════════════════════════════════════════════════════
+\section{Deployment \& Distribution}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Web App (PWA)}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item Run \texttt{npm run build} in \texttt{budgt-app/} to produce the \texttt{dist/} folder.
+  \item Deploy the \texttt{dist/} folder to any static web hosting service (Netlify, Vercel, GitHub Pages, Firebase Hosting, etc.).
+  \item The Service Worker (\texttt{sw.js}) will automatically cache assets for offline use after the first load.
+  \item Users may install the PWA to their home screen via the browser's ``Add to Home Screen'' prompt.
+\end{enumerate}
+
+\subsection{Android APK}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item Ensure the bundled web assets in \texttt{Budgt-mobile/app/src/main/assets/} reflect the latest \texttt{dist/} build.
+  \item Run \texttt{.\textbackslash{}gradlew.bat assembleDebug} (debug) or \texttt{assembleRelease} (signed release) from the \texttt{Budgt-mobile/} directory.
+  \item Distribute the APK directly (sideload) or upload to Google Play Console.
+  \item The current released APK is \textbf{Version 1.0.6 (versionCode 7)}.
+\end{enumerate}
+
+\begin{cautionbox}
+The current APK is a \textbf{debug build}. For Play Store submission, a \textbf{signed release APK or AAB} must be produced with a keystore. Ensure the keystore file and credentials are stored securely and backed up --- losing the keystore means the app cannot be updated on the Play Store.
+\end{cautionbox}
+
+\subsection{iOS (Xcode / TestFlight / App Store)}
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item Open \texttt{Budgt.xcodeproj} in Xcode on macOS.
+  \item Set the correct \textbf{Team} and \textbf{Bundle Identifier} in the project target settings.
+  \item Archive the app: \textbf{Product $\rightarrow$ Archive}.
+  \item Distribute via \textbf{TestFlight} (internal testing) or \textbf{App Store Connect} (public release).
+\end{enumerate}
+
+% ════════════════════════════════════════════════════════════
+\section{Known Issues \& Limitations}
+% ════════════════════════════════════════════════════════════
+
+\begin{longtable}{L{3cm} C{2cm} L{9.5cm}}
+  \toprule
+  \textbf{Issue} & \textbf{Severity} & \textbf{Details} \\
+  \midrule
+  \endhead
+  localStorage Limit & Medium & Browsers impose a $\sim$5--10 MB limit on \texttt{localStorage}. Users with very high transaction volumes (thousands of records) may encounter storage quota errors. Mitigation: periodic JSON export/archival. \\[4pt]
+  No Multi-Device Sync & Medium & Data exists only on the device where it was entered. A JSON backup/restore workflow is the only cross-device migration path. \\[4pt]
+  Debug APK & High & The distributed Android APK is a debug build; it should not be submitted to the Play Store without a signed release build. \\[4pt]
+  JVM Crash Logs & Low & Multiple \texttt{hs\_err\_pidXXXX.log} and \texttt{replay\_pidXXXX.log} JVM crash logs are present in the \texttt{Budgt-mobile/} root directory. These are artifacts from Android Studio crashes and can be safely deleted. \\[4pt]
+  iOS Data Isolation & Info & The iOS app uses \texttt{UserDefaults} and is entirely independent of the web/Android data --- there is no shared storage between platforms. \\[4pt]
+  No Authentication & Info & There is no user login or authentication mechanism. All data is local and accessible to anyone with physical access to the device. \\
+  \bottomrule
+\end{longtable}
+
+% ════════════════════════════════════════════════════════════
+\section{Future Roadmap Considerations}
+% ════════════════════════════════════════════════════════════
+
+The following enhancements were identified during development but have not yet been implemented:
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+  \item \textbf{Cloud Sync / Multi-Device Support} --- Integrate a backend (Supabase, Firebase) to sync data across devices. The \texttt{store.js} abstraction layer is already designed to facilitate this with minimal refactoring.
+  \item \textbf{User Authentication} --- Add OAuth (Google/Apple Sign-In) or email/password login to scope data per user for multi-device sync.
+  \item \textbf{Recurring Transaction Automation} --- Auto-generate transaction records from the Bills/Subscriptions list when due dates are reached.
+  \item \textbf{Signed Release APK / Play Store Listing} --- Convert the debug APK to a signed release build and submit to Google Play.
+  \item \textbf{iOS App Store Submission} --- Submit the SwiftUI app to the Apple App Store with a proper provisioning profile.
+  \item \textbf{Investment Tracking} --- Add a module for tracking stocks, crypto, and other investment portfolios within the net worth calculation.
+  \item \textbf{Debt Payoff Planner} --- Visual planner for liability accounts with payoff projections (avalanche/snowball methods).
+  \item \textbf{Localization Expansion} --- Extend multi-language support beyond English, Indonesian, and Malay (e.g.\ Chinese, Arabic).
+  \item \textbf{Accessibility (a11y)} --- Audit and improve ARIA labels, keyboard navigation, and contrast ratios across the web UI.
+\end{itemize}
+
+% ════════════════════════════════════════════════════════════
+\section{Contacts \& Handover Sign-Off}
+% ════════════════════════════════════════════════════════════
+
+\vspace{0.5cm}
+
+\begin{longtable}{L{5cm} L{9.5cm}}
+  \toprule
+  \textbf{Role} & \textbf{Name / Contact} \\
+  \midrule
+  \endhead
+  Outgoing Developer & \textit{[To be filled]} \\[4pt]
+  Incoming Developer / Team & \textit{[To be filled]} \\[4pt]
+  Project Stakeholder & \textit{[To be filled]} \\[4pt]
+  Repository URL & \textit{[To be filled]} \\[4pt]
+  Handover Date & August 2026 \\
+  \bottomrule
+\end{longtable}
+
+\vspace{1.5cm}
+
+\noindent\textbf{Declaration}
+
+\vspace{0.3cm}
+
+\noindent I confirm that the information contained in this handover document is accurate and complete to the best of my knowledge as of the date above, and that all relevant materials, credentials, and documentation have been transferred to the incoming team.
+
+\vspace{2cm}
+
+\noindent\begin{tabular}{@{}p{6cm} p{2cm} p{6cm}}
+  \cline{1-1}\cline{3-3}\\[-8pt]
+  \textit{Outgoing Developer Signature} & & \textit{Incoming Representative Signature}\\[6pt]
+  \textit{Date:} \underline{\hspace{3cm}} & & \textit{Date:} \underline{\hspace{3cm}}
+\end{tabular}
+
+% ════════════════════════════════════════════════════════════
+\appendix
+\section{Default Seed Data Summary}
+% ════════════════════════════════════════════════════════════
+
+\subsection{Default Categories}
+
+\begin{longtable}{L{3.5cm} C{2.5cm} L{7.5cm}}
+  \toprule
+  \textbf{Name} & \textbf{Type} & \textbf{Icon} \\
+  \midrule
+  \endhead
+  Food \& Dining      & Expense & \texttt{ph-fork-knife} \\
+  Transport           & Expense & \texttt{ph-car} \\
+  Housing             & Expense & \texttt{ph-house} \\
+  Entertainment       & Expense & \texttt{ph-film-strip} \\
+  Shopping            & Expense & \texttt{ph-shopping-bag} \\
+  Health              & Expense & \texttt{ph-heart} \\
+  Utilities           & Expense & \texttt{ph-lightning} \\
+  Groceries           & Expense & \texttt{ph-basket} \\
+  Subscriptions       & Expense & \texttt{ph-repeat} \\
+  Education           & Expense & \texttt{ph-graduation-cap} \\
+  Salary              & Income  & \texttt{ph-money} \\
+  Freelance           & Income  & \texttt{ph-briefcase} \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Default Accounts}
+
+\begin{longtable}{L{4cm} C{2.5cm} C{3cm} L{4cm}}
+  \toprule
+  \textbf{Name} & \textbf{Type} & \textbf{Demo Balance} & \textbf{Icon} \\
+  \midrule
+  \endhead
+  Checking Account & Asset & \$4,280.50 & \texttt{ph-bank} \\
+  Savings          & Asset & \$12,500.00 & \texttt{ph-piggy-bank} \\
+  Cash             & Asset & \$340.00 & \texttt{ph-wallet} \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Default Monthly Budgets}
+
+\begin{longtable}{L{5cm} C{5cm}}
+  \toprule
+  \textbf{Category} & \textbf{Monthly Cap} \\
+  \midrule
+  \endhead
+  Food \& Dining   & \$300 \\
+  Transport        & \$200 \\
+  Groceries        & \$400 \\
+  Entertainment    & \$150 \\
+  Shopping         & \$200 \\
+  \bottomrule
+\end{longtable}
+
+% ════════════════════════════════════════════════════════════
+\section{Android Manifest Permissions}
+% ════════════════════════════════════════════════════════════
+
+The Android app declares the following permissions in \texttt{AndroidManifest.xml}:
+
+\begin{longtable}{L{5.5cm} L{9cm}}
+  \toprule
+  \textbf{Permission} & \textbf{Purpose} \\
+  \midrule
+  \endhead
+  \texttt{INTERNET} & Required by \texttt{WebViewAssetLoader} even when serving local assets over the pseudo-HTTPS domain. \\[4pt]
+  \texttt{ACCESS\_NETWORK\_STATE} & Allows the app to check connectivity status (used for PWA cache strategy decisions). \\
+  \bottomrule
+\end{longtable}
+
+\begin{notebox}
+  No location, camera, microphone, or contacts permissions are required. The app is entirely local and does not transmit any data over the network.
+\end{notebox}
+
+\end{document}
