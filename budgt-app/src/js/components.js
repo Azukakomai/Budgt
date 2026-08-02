@@ -44,13 +44,15 @@ export function renderNav() {
     </div>
   `;
 
-  nav.addEventListener('click', (e) => {
-    const fabBtn = e.target.closest('#nav-fab');
-    if (fabBtn) {
+  const fabBtn = nav.querySelector('#nav-fab');
+  if (fabBtn) {
+    fabBtn.onclick = (e) => {
+      e.stopPropagation();
       showTransactionForm();
-      return;
-    }
+    };
+  }
 
+  nav.addEventListener('click', (e) => {
     const navItem = e.target.closest('.nav-item');
     if (!navItem) return;
     const route = navItem.dataset.route;
@@ -292,6 +294,9 @@ import { State } from './state.js';
 import { generateId, formatCurrency, CATEGORY_COLORS } from './utils.js';
 
 export function showTransactionForm(existingTx = null) {
+  // Always close any currently open sheet before opening a new form
+  closeSheet();
+
   const categories = State.getCategories();
   const accounts = State.getAssetAccounts();
   const isEdit = !!existingTx;
