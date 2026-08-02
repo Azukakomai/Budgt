@@ -1,0 +1,717 @@
+% ============================================================
+%  BUDGT — Panduan Penggunaan Aplikasi (Bahasa Indonesia)
+%  Dibuat: Agustus 2026
+% ============================================================
+\documentclass[12pt, a4paper]{article}
+
+% ── Paket ───────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{parskip}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{fontawesome5}
+\usetikzlibrary{calc}
+
+% ── Palet Warna ─────────────────────────────────────────────
+\definecolor{budgt-accent}{HTML}{6366F1}
+\definecolor{budgt-dark}{HTML}{161820}
+\definecolor{budgt-gray}{HTML}{94A3B8}
+\definecolor{budgt-green}{HTML}{16A34A}
+\definecolor{budgt-red}{HTML}{DC2626}
+\definecolor{budgt-blue}{HTML}{2563EB}
+\definecolor{budgt-orange}{HTML}{EA580C}
+\definecolor{code-bg}{HTML}{F8FAFC}
+\definecolor{note-bg}{HTML}{EFF6FF}
+\definecolor{tip-bg}{HTML}{F0FDF4}
+\definecolor{warn-bg}{HTML}{FFF7ED}
+\definecolor{cover-pink}{HTML}{F9B8C5}
+\definecolor{cover-mint}{HTML}{A3D8D4}
+\definecolor{step-bg}{HTML}{F5F3FF}
+
+% ── Hyperref ────────────────────────────────────────────────
+\hypersetup{
+    colorlinks=true,
+    linkcolor=budgt-accent,
+    urlcolor=budgt-blue,
+    pdftitle={BUDGT - Panduan Penggunaan Aplikasi},
+    pdfauthor={Tim Pengembang BUDGT},
+    pdfsubject={Panduan Pengguna},
+    pdflang={id},
+}
+
+% ── Format Judul Seksi ──────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\sffamily\color{budgt-accent}}
+  {\thesection}{1em}{}[\color{budgt-gray!60}\titlerule]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\sffamily\color{budgt-dark}}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\itshape\sffamily\color{budgt-dark}}
+  {\thesubsubsection}{1em}{}
+
+% ── Kotak Kustom ────────────────────────────────────────────
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{tipbox}[1][]{
+  colback=tip-bg, colframe=budgt-green,
+  boxrule=0.5pt, arc=5pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  title={\small\bfseries\sffamily\color{budgt-green} \faLightbulb\ \ Tips},
+  fonttitle=\bfseries, #1
+}
+
+\newtcolorbox{notebox}[1][]{
+  colback=note-bg, colframe=budgt-blue,
+  boxrule=0.5pt, arc=5pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  title={\small\bfseries\sffamily\color{budgt-blue} \faInfoCircle\ \ Catatan},
+  fonttitle=\bfseries, #1
+}
+
+\newtcolorbox{warnbox}[1][]{
+  colback=warn-bg, colframe=budgt-orange,
+  boxrule=0.5pt, arc=5pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  title={\small\bfseries\sffamily\color{budgt-orange} \faExclamationTriangle\ \ Perhatian},
+  fonttitle=\bfseries, #1
+}
+
+% Kotak langkah bernomor
+\newcounter{langkah}[section]
+\newtcolorbox{stepbox}[1]{
+  colback=step-bg, colframe=budgt-accent,
+  boxrule=0.5pt, arc=5pt,
+  left=10pt, right=8pt, top=6pt, bottom=6pt,
+  title={\small\bfseries\sffamily\color{budgt-accent} Langkah~\stepcounter{langkah}\thelangkah\ \ \textbf{#1}},
+  fonttitle=\bfseries,
+}
+
+% ── Header / Footer ─────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{budgt-gray}\sffamily BUDGT --- Panduan Penggunaan Aplikasi}
+\fancyhead[R]{\small\color{budgt-gray}\sffamily Agustus 2026}
+\fancyfoot[C]{\small\color{budgt-gray}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{budgt-gray!40}\leaders\hrule height \headrulewidth\hfill}}
+
+% ── Tipe Kolom ──────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ════════════════════════════════════════════════════════════
+\begin{document}
+% ════════════════════════════════════════════════════════════
+
+% ── Halaman Sampul ──────────────────────────────────────────
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+
+  % Latar belakang gradien pastel
+  \shade[top color=cover-pink!70!white,
+         bottom color=cover-mint!80!white]
+    (current page.south west) rectangle (current page.north east);
+
+  % Bingkai sudut atas (bentuk Gamma)
+  \draw[black!55, line width=0.5pt]
+    ($(current page.north west) + (2.2cm, -1.6cm)$) --
+    ($(current page.north east) + (-1.6cm, -1.6cm)$) --
+    ($(current page.north east) + (-1.6cm, -5.5cm)$);
+
+  % Bingkai sudut bawah (bentuk L)
+  \draw[black!55, line width=0.5pt]
+    ($(current page.south west) + (1.6cm, 5.5cm)$) --
+    ($(current page.south west) + (1.6cm, 1.6cm)$) --
+    ($(current page.south east) + (-2.2cm, 1.6cm)$);
+
+  % Kotak logo
+  \fill[black]
+    ($(current page.north west) + (2.2cm, -2.3cm)$) rectangle
+    ($(current page.north west) + (4.8cm, -4.5cm)$);
+  \node[white, font=\sffamily\bfseries\small, align=center] at
+    ($(current page.north west) + (3.5cm, -3.4cm)$)
+    {BUDGT};
+
+  % Judul utama
+  \node[black, font=\sffamily\bfseries\fontsize{38}{46}\selectfont,
+        align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -8.5cm)$)
+    {PANDUAN\\[6pt]PENGGUNAAN\\[6pt]APLIKASI};
+
+  % Subjudul
+  \node[black!65, font=\sffamily\normalsize, align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -16.5cm)$)
+    {Panduan lengkap fitur dan cara penggunaan\\BUDGT --- Aplikasi Keuangan Pribadi};
+
+  % Label dibuat oleh
+  \node[black!65, font=\sffamily\small, align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -19.5cm)$)
+    {Dibuat oleh:};
+  \node[black, font=\sffamily\bfseries\normalsize, align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -20.4cm)$)
+    {Tim Pengembang BUDGT};
+
+  % Blok metadata
+  \node[black!65, font=\sffamily\small, align=left, anchor=north west,
+        inner sep=0pt] at
+    ($(current page.north west) + (2.2cm, -22cm)$)
+    {Versi 1.0.6 (versionCode~7)\\[3pt]%
+     Agustus 2026\\[3pt]%
+     Android \textbullet{} iOS \textbullet{} Web (PWA)\\[3pt]%
+     Bahasa: Indonesia};
+
+\end{tikzpicture}
+\null
+\end{titlepage}
+
+% ── Daftar Isi ──────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+% ════════════════════════════════════════════════════════════
+\section{Pengenalan BUDGT}
+% ════════════════════════════════════════════════════════════
+
+\textbf{BUDGT} adalah aplikasi manajemen keuangan pribadi yang ringan, cepat, dan sepenuhnya berjalan di perangkat Anda tanpa koneksi internet. Semua data keuangan Anda tersimpan \textbf{100\% secara lokal} di perangkat --- tidak ada server eksternal, tidak ada pelacakan data, dan privasi Anda tetap terjaga sepenuhnya.
+
+\subsection{Platform yang Didukung}
+
+\begin{longtable}{C{1.5cm} L{3.5cm} L{9cm}}
+  \toprule
+  \textbf{Ikon} & \textbf{Platform} & \textbf{Cara Mengakses} \\
+  \midrule
+  \endhead
+  \faAndroid & Android & Instal APK \texttt{Budgt.apk} secara langsung ke perangkat Android. \\[4pt]
+  \faApple & iOS (iPhone/iPad) & Buka proyek di Xcode dan jalankan di simulator atau perangkat fisik. \\[4pt]
+  \faGlobe & Web / PWA & Buka alamat web di browser, lalu pilih ``Tambah ke Layar Utama'' untuk instalasi offline. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Tampilan Navigasi Utama}
+
+Aplikasi BUDGT memiliki \textbf{5 tab navigasi} utama di bagian bawah layar:
+
+\begin{longtable}{C{2cm} L{3.5cm} L{8.5cm}}
+  \toprule
+  \textbf{Tab} & \textbf{Nama} & \textbf{Fungsi Singkat} \\
+  \midrule
+  \endhead
+  \faChartPie & Beranda & Ringkasan kekayaan bersih, arus kas, dan grafik pengeluaran. \\[4pt]
+  \faExchangeAlt & Transaksi & Catat dan kelola semua pemasukan, pengeluaran, dan transfer. \\[4pt]
+  \faWallet & Akun & Kelola akun aset dan kewajiban (kartu kredit, pinjaman). \\[4pt]
+  \faBullseye & Anggaran & Tetapkan batas pengeluaran per kategori dan pantau target tabungan. \\[4pt]
+  \faEllipsisH & Lainnya & Akses laporan, pengaturan, kategori, celengan, dan tagihan. \\
+  \bottomrule
+\end{longtable}
+
+% ════════════════════════════════════════════════════════════
+\section{Beranda (Dashboard)}
+% ════════════════════════════════════════════════════════════
+
+Halaman \textbf{Beranda} adalah tampilan pertama yang muncul saat membuka aplikasi. Di sini Anda dapat melihat kondisi keuangan secara menyeluruh dalam satu pandang.
+
+\subsection{Elemen di Halaman Beranda}
+
+\begin{longtable}{L{4cm} L{10cm}}
+  \toprule
+  \textbf{Elemen} & \textbf{Penjelasan} \\
+  \midrule
+  \endhead
+  Kartu Kekayaan Bersih & Menampilkan total kekayaan bersih (\textit{Net Worth}) yang dihitung dari selisih antara total aset dan total kewajiban Anda. \\[4pt]
+  Ringkasan Bulanan & Dua kartu yang menampilkan total \textbf{Pemasukan} dan total \textbf{Pengeluaran} untuk bulan berjalan. \\[4pt]
+  Grafik Kategori & Diagram lingkaran (\textit{pie chart}) yang memvisualisasikan distribusi pengeluaran Anda berdasarkan kategori bulan ini. \\[4pt]
+  Tren Bulanan & Grafik batang yang menunjukkan perbandingan pemasukan dan pengeluaran selama beberapa bulan terakhir. \\[4pt]
+  Transaksi Terbaru & Daftar singkat 5--10 transaksi paling baru sebagai referensi cepat. \\
+  \bottomrule
+\end{longtable}
+
+\begin{tipbox}
+Ketuk kartu \textbf{Kekayaan Bersih} untuk melihat rincian semua akun aset dan kewajiban secara lengkap di halaman Akun.
+\end{tipbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Mengelola Akun}
+% ════════════════════════════════════════════════════════════
+
+Halaman \textbf{Akun} memungkinkan Anda mengelola semua rekening dan dompet keuangan. BUDGT mendukung dua jenis akun:
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+  \item \textbf{Akun Aset} --- Rekening bank, tabungan, dan uang tunai yang bernilai positif terhadap kekayaan bersih Anda. \textit{Contoh: Rekening Giro, Tabungan, Kas.}
+  \item \textbf{Akun Kewajiban} --- Utang atau tagihan yang bernilai negatif terhadap kekayaan bersih Anda. \textit{Contoh: Kartu Kredit, Pinjaman.}
+\end{itemize}
+
+\subsection{Cara Menambah Akun Baru}
+
+\begin{stepbox}{Buka Halaman Akun}
+  Ketuk tab \textbf{Akun} di navigasi bawah.
+\end{stepbox}
+
+\begin{stepbox}{Tambah Akun}
+  Ketuk tombol \textbf{``+ Tambah Akun''} atau ikon \faPlus\ di sudut kanan atas.
+\end{stepbox}
+
+\begin{stepbox}{Isi Detail Akun}
+  Lengkapi formulir berikut:
+  \begin{itemize}[leftmargin=1em, itemsep=2pt]
+    \item \textbf{Nama Akun} --- misalnya ``BCA Tabungan'' atau ``Dompet Tunai''.
+    \item \textbf{Jenis Akun} --- pilih \textit{Aset} atau \textit{Kewajiban}.
+    \item \textbf{Saldo Awal} --- masukkan saldo saat ini.
+    \item \textbf{Ikon \& Warna} --- pilih ikon dan warna penanda akun.
+  \end{itemize}
+\end{stepbox}
+
+\begin{stepbox}{Simpan}
+  Ketuk \textbf{``Simpan''} untuk menambahkan akun ke daftar.
+\end{stepbox}
+
+\subsection{Mengedit Saldo Akun}
+
+Untuk mengoreksi saldo akun tanpa membuat transaksi:
+\begin{enumerate}[leftmargin=1.5em]
+  \item Ketuk akun yang ingin diedit dari daftar.
+  \item Pilih opsi \textbf{``Edit Saldo''}.
+  \item Masukkan nominal saldo yang benar, lalu simpan.
+\end{enumerate}
+
+\begin{notebox}
+Saldo akun akan \textbf{diperbarui secara otomatis} setiap kali Anda menambah, mengedit, atau menghapus transaksi yang terhubung dengan akun tersebut. Tidak perlu memperbarui saldo secara manual setelah mencatat transaksi.
+\end{notebox}
+
+% ════════════════════════════════════════════════════════════
+\section{Mencatat Transaksi}
+% ════════════════════════════════════════════════════════════
+
+Halaman \textbf{Transaksi} adalah inti dari aplikasi BUDGT. Di sini Anda mencatat semua aktivitas keuangan harian. Terdapat tiga jenis transaksi:
+
+\begin{longtable}{C{2cm} L{3.5cm} L{8.5cm}}
+  \toprule
+  \textbf{Ikon} & \textbf{Jenis} & \textbf{Penjelasan} \\
+  \midrule
+  \endhead
+  \faArrowDown\ {\color{budgt-red}\faCircle} & Pengeluaran & Uang keluar dari akun Anda. \textit{Contoh: Belanja, Makan, Bayar tagihan.} \\[4pt]
+  \faArrowUp\ {\color{budgt-green}\faCircle} & Pemasukan & Uang masuk ke akun Anda. \textit{Contoh: Gaji, Freelance, Bonus.} \\[4pt]
+  \faExchangeAlt\ {\color{budgt-blue}\faCircle} & Transfer & Perpindahan uang antar akun milik Anda sendiri. \textit{Contoh: Transfer dari Giro ke Tabungan.} \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Cara Menambah Transaksi Baru}
+
+\begin{stepbox}{Buka Halaman Transaksi}
+  Ketuk tab \textbf{Transaksi} di navigasi bawah.
+\end{stepbox}
+
+\begin{stepbox}{Buka Formulir Tambah}
+  Ketuk tombol \textbf{``+''} atau \textbf{``Tambah Transaksi''} di bagian atas halaman.
+\end{stepbox}
+
+\begin{stepbox}{Pilih Jenis Transaksi}
+  Pilih salah satu dari tiga tab: \textbf{Pengeluaran}, \textbf{Pemasukan}, atau \textbf{Transfer}.
+\end{stepbox}
+
+\begin{stepbox}{Isi Detail Transaksi}
+  Lengkapi informasi berikut sesuai jenis transaksi:
+
+  \vspace{4pt}
+  \textbf{Untuk Pengeluaran \& Pemasukan:}
+  \begin{itemize}[leftmargin=1em, itemsep=2pt]
+    \item \textbf{Jumlah} --- nominal transaksi.
+    \item \textbf{Kategori} --- pilih kategori yang sesuai (mis. Makanan, Transport, Gaji).
+    \item \textbf{Akun} --- pilih akun sumber atau tujuan.
+    \item \textbf{Tanggal} --- tanggal transaksi berlangsung.
+    \item \textbf{Catatan} --- keterangan opsional (mis. ``Makan siang bersama klien'').
+  \end{itemize}
+
+  \vspace{4pt}
+  \textbf{Untuk Transfer:}
+  \begin{itemize}[leftmargin=1em, itemsep=2pt]
+    \item \textbf{Jumlah} --- nominal yang dipindahkan.
+    \item \textbf{Dari Akun} --- akun asal uang.
+    \item \textbf{Ke Akun} --- akun tujuan uang.
+    \item \textbf{Tanggal} --- tanggal transfer.
+  \end{itemize}
+\end{stepbox}
+
+\begin{stepbox}{Simpan Transaksi}
+  Ketuk \textbf{``Simpan''}. Saldo akun terkait akan diperbarui secara instan.
+\end{stepbox}
+
+\subsection{Mencari dan Menyaring Transaksi}
+
+Di halaman Transaksi, tersedia beberapa fitur untuk menemukan transaksi dengan cepat:
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+  \item \textbf{Kotak Pencarian} --- ketikkan kata kunci, nama toko, atau nominal untuk mencari transaksi tertentu.
+  \item \textbf{Filter Bulan} --- gunakan tombol navigasi bulan untuk melihat transaksi di periode tertentu.
+  \item \textbf{Filter Kategori} --- filter transaksi berdasarkan kategori tertentu.
+\end{itemize}
+
+\subsection{Menghapus Transaksi}
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Web/Android:} Ketuk transaksi, lalu pilih ikon hapus \faTrash.
+  \item \textbf{iOS:} Geser (\textit{swipe}) transaksi ke kiri, lalu ketuk \textbf{``Hapus''}.
+\end{itemize}
+
+\begin{warnbox}
+Menghapus transaksi akan \textbf{membalikkan efek} pada saldo akun terkait secara otomatis. Pastikan Anda benar-benar ingin menghapus sebelum mengonfirmasi.
+\end{warnbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Anggaran (Budgets)}
+% ════════════════════════════════════════════════════════════
+
+Fitur \textbf{Anggaran} membantu Anda menetapkan batas maksimal pengeluaran per kategori setiap bulan. Dengan anggaran, Anda bisa mengendalikan kebiasaan belanja dan menghindari pengeluaran berlebih.
+
+\subsection{Cara Membuat Anggaran}
+
+\begin{stepbox}{Buka Halaman Anggaran}
+  Ketuk tab \textbf{Anggaran} di navigasi bawah.
+\end{stepbox}
+
+\begin{stepbox}{Tambah Anggaran Baru}
+  Ketuk \textbf{``+ Tambah Anggaran''} atau ikon \faPlus.
+\end{stepbox}
+
+\begin{stepbox}{Pilih Kategori}
+  Pilih kategori yang ingin dibatasi (mis. Makanan, Hiburan, Belanja).
+\end{stepbox}
+
+\begin{stepbox}{Tentukan Batas Pengeluaran}
+  Masukkan jumlah maksimal yang ingin Anda keluarkan untuk kategori tersebut dalam satu bulan.
+\end{stepbox}
+
+\begin{stepbox}{Simpan}
+  Ketuk \textbf{``Simpan''}. Anggaran akan langsung muncul dengan indikator progres.
+\end{stepbox}
+
+\subsection{Membaca Indikator Anggaran}
+
+Setiap anggaran ditampilkan sebagai \textbf{bilah progres} dengan kode warna:
+
+\begin{longtable}{C{2.5cm} L{4cm} L{7.5cm}}
+  \toprule
+  \textbf{Warna} & \textbf{Status} & \textbf{Artinya} \\
+  \midrule
+  \endhead
+  {\color{budgt-green}\rule{1.5cm}{6pt}} & Aman & Pengeluaran masih di bawah 75\% dari batas anggaran. \\[4pt]
+  {\color{budgt-orange}\rule{1.5cm}{6pt}} & Peringatan & Pengeluaran sudah mencapai 75--99\% dari batas anggaran. \\[4pt]
+  {\color{budgt-red}\rule{1.5cm}{6pt}} & Terlampaui & Pengeluaran sudah melebihi batas anggaran bulan ini. \\
+  \bottomrule
+\end{longtable}
+
+\begin{tipbox}
+Tetapkan anggaran untuk kategori dengan pengeluaran terbesar terlebih dahulu --- biasanya Makanan, Transport, dan Belanja --- agar dampaknya terasa langsung pada kondisi keuangan Anda.
+\end{tipbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Celengan (Piggy Banks)}
+% ════════════════════════════════════════════════════════════
+
+\textbf{Celengan} (Piggy Banks) adalah fitur untuk mencatat dan melacak kemajuan menuju target tabungan tertentu. Berbeda dari anggaran yang membatasi pengeluaran, celengan \textit{mendorong} Anda untuk mengumpulkan dana demi tujuan finansial spesifik.
+
+\textit{Contoh penggunaan:} Liburan ke Eropa, Laptop baru, Dana darurat, Uang muka rumah.
+
+\subsection{Cara Membuat Celengan}
+
+Fitur Celengan dapat diakses melalui \textbf{tab Anggaran} (bagian bawah halaman) atau melalui \textbf{tab Lainnya → Celengan}.
+
+\begin{stepbox}{Tambah Celengan Baru}
+  Ketuk \textbf{``+ Tambah Celengan''}.
+\end{stepbox}
+
+\begin{stepbox}{Isi Detail Celengan}
+  \begin{itemize}[leftmargin=1em, itemsep=2pt]
+    \item \textbf{Nama} --- mis. ``Liburan Bali''.
+    \item \textbf{Target Jumlah} --- jumlah total yang ingin dikumpulkan.
+    \item \textbf{Jumlah Terkumpul} --- dana yang sudah ada saat ini.
+    \item \textbf{Akun Terkait} --- akun tabungan yang digunakan.
+    \item \textbf{Tenggat Waktu} --- tanggal target (opsional).
+    \item \textbf{Ikon} --- pilih ikon yang mewakili tujuan Anda.
+  \end{itemize}
+\end{stepbox}
+
+\begin{stepbox}{Simpan dan Pantau Progres}
+  Celengan akan menampilkan bilah progres yang menunjukkan persentase dana yang sudah terkumpul dari target.
+\end{stepbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Tagihan Rutin (Bills)}
+% ════════════════════════════════════════════════════════════
+
+Fitur \textbf{Tagihan Rutin} membantu Anda melacak pembayaran berulang yang harus dibayar secara berkala, seperti sewa, langganan, atau cicilan. Tidak ada lagi tagihan yang terlewat!
+
+\subsection{Cara Menambah Tagihan Rutin}
+
+Akses melalui \textbf{tab Lainnya → Tagihan}.
+
+\begin{stepbox}{Tambah Tagihan Baru}
+  Ketuk \textbf{``+ Tambah Tagihan''}.
+\end{stepbox}
+
+\begin{stepbox}{Isi Detail Tagihan}
+  \begin{itemize}[leftmargin=1em, itemsep=2pt]
+    \item \textbf{Nama Tagihan} --- mis. ``Listrik PLN'' atau ``Netflix''.
+    \item \textbf{Jumlah} --- nominal tagihan.
+    \item \textbf{Kategori} --- kategori pengeluaran terkait.
+    \item \textbf{Frekuensi} --- pilih \textit{Bulanan}, \textit{Mingguan}, atau \textit{Tahunan}.
+    \item \textbf{Tanggal Jatuh Tempo Berikutnya} --- kapan tagihan harus dibayar.
+    \item \textbf{Bayar Otomatis} --- tandai jika tagihan terbayar secara otomatis (debit otomatis).
+  \end{itemize}
+\end{stepbox}
+
+\begin{stepbox}{Simpan}
+  Tagihan akan muncul di daftar dengan informasi tanggal jatuh tempo berikutnya.
+\end{stepbox}
+
+\begin{notebox}
+Fitur tagihan bersifat \textbf{pengingat} --- aplikasi tidak secara otomatis memotong saldo akun Anda. Catat pembayaran tagihan secara manual di halaman Transaksi setelah tagihan terbayar.
+\end{notebox}
+
+% ════════════════════════════════════════════════════════════
+\section{Laporan Keuangan}
+% ════════════════════════════════════════════════════════════
+
+BUDGT menyediakan tiga format ekspor laporan keuangan yang dapat Anda buat langsung dari aplikasi tanpa memerlukan koneksi internet.
+
+\subsection{Jenis Laporan yang Tersedia}
+
+\begin{longtable}{L{3.5cm} L{3cm} L{7.5cm}}
+  \toprule
+  \textbf{Jenis Laporan} & \textbf{Format} & \textbf{Isi} \\
+  \midrule
+  \endhead
+  Laporan Laba/Rugi & PDF (.pdf) & Ringkasan pemasukan, pengeluaran, dan saldo bersih per periode. Tersusun rapi dengan tabel dan subtotal per kategori. \\[4pt]
+  Ekspor Transaksi & Excel (.xlsx) & Seluruh data transaksi dalam format spreadsheet untuk analisis lanjutan di Excel atau Google Sheets. \\[4pt]
+  Cadangan Data & JSON (.json) & Ekspor seluruh data aplikasi (transaksi, akun, kategori, anggaran) ke satu file untuk cadangan atau pemindahan ke perangkat lain. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Cara Membuat Laporan PDF}
+
+Akses melalui \textbf{tab Lainnya → Laporan}.
+
+\begin{stepbox}{Pilih Jenis Laporan}
+  Pilih \textbf{``Laporan PDF''} atau \textbf{``Laba/Rugi''}.
+\end{stepbox}
+
+\begin{stepbox}{Pilih Periode}
+  Tentukan rentang tanggal laporan (mis. bulan berjalan, kuartal, atau tahun penuh).
+\end{stepbox}
+
+\begin{stepbox}{Buat dan Unduh}
+  Ketuk \textbf{``Buat Laporan''}. File PDF akan diunduh otomatis ke folder \textit{Unduhan} perangkat Anda.
+\end{stepbox}
+
+\subsection{Cara Ekspor ke Excel}
+
+\begin{stepbox}{Pilih Ekspor Excel}
+  Di halaman Laporan, pilih \textbf{``Ekspor Excel / CSV''}.
+\end{stepbox}
+
+\begin{stepbox}{Pilih Filter (Opsional)}
+  Saring berdasarkan akun atau kategori tertentu jika diperlukan.
+\end{stepbox}
+
+\begin{stepbox}{Unduh File}
+  File \texttt{.xlsx} akan otomatis tersimpan ke perangkat Anda.
+\end{stepbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Cadangan \& Pemulihan Data}
+% ════════════════════════════════════════════════════════════
+
+Karena data BUDGT tersimpan secara lokal, sangat disarankan untuk \textbf{membuat cadangan secara berkala}, terutama sebelum mengganti perangkat atau menghapus aplikasi.
+
+\subsection{Membuat Cadangan (Ekspor JSON)}
+
+\begin{stepbox}{Buka Pengaturan}
+  Ketuk \textbf{tab Lainnya → Pengaturan}.
+\end{stepbox}
+
+\begin{stepbox}{Pilih Cadangan Data}
+  Ketuk \textbf{``Ekspor Cadangan''} atau \textbf{``Backup JSON''}.
+\end{stepbox}
+
+\begin{stepbox}{Simpan File}
+  File \texttt{budgt-backup.json} akan diunduh ke perangkat. Simpan file ini di lokasi yang aman --- Google Drive, OneDrive, atau email ke diri sendiri.
+\end{stepbox}
+
+\subsection{Memulihkan Data (Impor JSON)}
+
+\begin{stepbox}{Buka Pengaturan}
+  Di perangkat baru atau setelah instal ulang, buka \textbf{tab Lainnya → Pengaturan}.
+\end{stepbox}
+
+\begin{stepbox}{Pilih Impor Data}
+  Ketuk \textbf{``Impor Cadangan''} atau \textbf{``Restore JSON''}.
+\end{stepbox}
+
+\begin{stepbox}{Pilih File Cadangan}
+  Cari dan pilih file \texttt{.json} yang sebelumnya disimpan.
+\end{stepbox}
+
+\begin{stepbox}{Konfirmasi}
+  Konfirmasi pemuliahan. Semua data (transaksi, akun, anggaran, dll.) akan dipulihkan sepenuhnya.
+\end{stepbox}
+
+\begin{warnbox}
+Mengimpor file cadangan akan \textbf{menimpa seluruh data yang ada} di aplikasi saat ini. Pastikan Anda telah membuat cadangan data yang ada terlebih dahulu sebelum melakukan impor.
+\end{warnbox}
+
+% ════════════════════════════════════════════════════════════
+\section{Pengaturan Aplikasi}
+% ════════════════════════════════════════════════════════════
+
+Halaman Pengaturan dapat diakses melalui \textbf{tab Lainnya → Pengaturan}.
+
+\subsection{Mata Uang}
+
+BUDGT mendukung berbagai mata uang. Ubah mata uang utama sesuai kebutuhan:
+
+\begin{longtable}{C{2.5cm} C{2cm} L{9.5cm}}
+  \toprule
+  \textbf{Mata Uang} & \textbf{Simbol} & \textbf{Format Angka} \\
+  \midrule
+  \endhead
+  Rupiah Indonesia & Rp & Rp 1.500.000 (disingkat ``Rp 1,5 Jt'') \\[4pt]
+  Dolar Amerika & \$ & \$1,500.00 (disingkat ``\$1.5K'') \\[4pt]
+  Ringgit Malaysia & RM & RM 1,500.00 \\[4pt]
+  Euro & \euro & \euro1,500.00 \\[4pt]
+  Poundsterling & \pounds & \pounds1,500.00 \\[4pt]
+  Yen Jepang & \textyen & \textyen150,000 \\
+  \bottomrule
+\end{longtable}
+
+\begin{notebox}
+Mengubah mata uang hanya mengubah \textbf{simbol dan format tampilan} --- nilai angka transaksi tidak dikonversi secara otomatis.
+\end{notebox}
+
+\subsection{Bahasa}
+
+Aplikasi mendukung tiga bahasa antarmuka:
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{English} (Bahasa Inggris) --- default.
+  \item \textbf{Bahasa Indonesia} --- Pilih \textit{Indonesian} di pengaturan bahasa.
+  \item \textbf{Bahasa Melayu} --- Pilih \textit{Malay} di pengaturan bahasa.
+\end{itemize}
+
+\subsection{Reset Data}
+
+Untuk menghapus semua data dan memulai dari awal:
+\begin{enumerate}[leftmargin=1.5em]
+  \item Buka \textbf{Pengaturan}.
+  \item Ketuk \textbf{``Reset ke Nol''} atau \textbf{``Hapus Semua Data''}.
+  \item Konfirmasi tindakan.
+\end{enumerate}
+
+Tindakan ini akan menghapus semua transaksi, anggaran, celengan, dan tagihan, namun \textbf{mempertahankan definisi kategori} dan mengatur ulang saldo akun ke nol.
+
+% ════════════════════════════════════════════════════════════
+\section{Mengelola Kategori}
+% ════════════════════════════════════════════════════════════
+
+Kategori digunakan untuk mengklasifikasikan setiap transaksi. BUDGT menyediakan 12 kategori bawaan yang langsung siap digunakan.
+
+\subsection{Kategori Bawaan}
+
+\begin{longtable}{L{4cm} C{2.5cm} L{7.5cm}}
+  \toprule
+  \textbf{Kategori} & \textbf{Jenis} & \textbf{Contoh Transaksi} \\
+  \midrule
+  \endhead
+  Makanan \& Minum & Pengeluaran & Makan siang, kopi, restoran. \\[3pt]
+  Transport & Pengeluaran & Bensin, ojek online, tol, parkir. \\[3pt]
+  Tempat Tinggal & Pengeluaran & Sewa kost, KPR, kontrakan. \\[3pt]
+  Hiburan & Pengeluaran & Bioskop, konser, liburan. \\[3pt]
+  Belanja & Pengeluaran & Pakaian, elektronik, peralatan rumah. \\[3pt]
+  Kesehatan & Pengeluaran & Obat, dokter, gym. \\[3pt]
+  Utilitas & Pengeluaran & Listrik, air, internet, telepon. \\[3pt]
+  Belanja Harian & Pengeluaran & Supermarket, pasar, warung. \\[3pt]
+  Langganan & Pengeluaran & Netflix, Spotify, iCloud, antivirus. \\[3pt]
+  Pendidikan & Pengeluaran & Kursus, buku, seminar, SPP. \\[3pt]
+  Gaji & Pemasukan & Gaji bulanan, THR, bonus. \\[3pt]
+  Freelance & Pemasukan & Proyek sampingan, konsultasi. \\
+  \bottomrule
+\end{longtable}
+
+\subsection{Menambah Kategori Kustom}
+
+Akses melalui \textbf{tab Lainnya → Kategori}:
+\begin{enumerate}[leftmargin=1.5em]
+  \item Ketuk \textbf{``+ Tambah Kategori''}.
+  \item Masukkan nama kategori.
+  \item Pilih jenis (\textit{Pengeluaran} atau \textit{Pemasukan}).
+  \item Pilih ikon dan warna penanda.
+  \item Ketuk \textbf{``Simpan''}.
+\end{enumerate}
+
+% ════════════════════════════════════════════════════════════
+\section{Pertanyaan Umum (FAQ)}
+% ════════════════════════════════════════════════════════════
+
+\subsection*{Apakah data saya tersimpan di cloud?}
+\textbf{Tidak.} Semua data tersimpan sepenuhnya di perangkat Anda (penyimpanan lokal browser atau memori aplikasi). Data tidak pernah dikirim ke server manapun.
+
+\subsection*{Bagaimana cara memindahkan data ke perangkat baru?}
+Gunakan fitur \textbf{Ekspor Cadangan (JSON)} di perangkat lama, lalu \textbf{Impor Cadangan} di perangkat baru. Lihat Bagian~8 untuk panduan lengkapnya.
+
+\subsection*{Apakah data hilang jika saya menghapus aplikasi?}
+\textbf{Ya.} Menghapus aplikasi atau menghapus data browser akan menghilangkan semua data BUDGT. Selalu buat cadangan JSON sebelum menghapus aplikasi.
+
+\subsection*{Berapa banyak transaksi yang bisa disimpan?}
+Secara teknis tidak terbatas, namun penyimpanan lokal browser memiliki batas sekitar 5--10 MB. Untuk pengguna aktif dengan ratusan transaksi per bulan, disarankan melakukan ekspor dan arsip data secara berkala.
+
+\subsection*{Bisakah saya menggunakan beberapa mata uang sekaligus?}
+Saat ini BUDGT mendukung \textbf{satu mata uang aktif} sekaligus. Untuk mengganti mata uang, buka Pengaturan dan ubah pilihan mata uang.
+
+\subsection*{Apakah tersedia sinkronisasi antar perangkat?}
+Belum tersedia di versi saat ini. Sinkronisasi multi-perangkat direncanakan untuk versi mendatang. Untuk saat ini, gunakan fitur cadangan JSON sebagai metode pemindahan data.
+
+\subsection*{Di mana file yang sudah diekspor tersimpan?}
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Android:} Folder \textbf{Unduhan} (\textit{Downloads}) di penyimpanan internal.
+  \item \textbf{Web (Browser):} Folder unduhan default browser Anda.
+  \item \textbf{iOS:} File disimpan melalui panel Berbagi (\textit{Share Sheet}) iOS ke aplikasi Files atau email.
+\end{itemize}
+
+% ════════════════════════════════════════════════════════════
+\section{Tips \& Praktik Terbaik}
+% ════════════════════════════════════════════════════════════
+
+\begin{tipbox}
+\textbf{Catat transaksi sesegera mungkin.} Semakin cepat Anda mencatat setelah transaksi terjadi, semakin akurat data keuangan Anda. Pertimbangkan untuk mencatat di akhir setiap hari.
+\end{tipbox}
+
+\begin{tipbox}
+\textbf{Buat cadangan JSON setiap bulan.} Jadwalkan ekspor cadangan di akhir setiap bulan dan simpan di Google Drive atau OneDrive sebagai perlindungan tambahan.
+\end{tipbox}
+
+\begin{tipbox}
+\textbf{Gunakan fitur Transfer, bukan Pengeluaran, untuk perpindahan dana antar akun.} Ini memastikan kekayaan bersih Anda tidak berubah saat memindahkan uang antara rekening Anda sendiri.
+\end{tipbox}
+
+\begin{tipbox}
+\textbf{Tetapkan anggaran yang realistis.} Mulai dengan memantau pengeluaran selama 1--2 bulan tanpa batas anggaran, lalu gunakan data tersebut sebagai dasar untuk menetapkan batas yang masuk akal.
+\end{tipbox}
+
+\begin{tipbox}
+\textbf{Pasang sebagai PWA untuk pengalaman terbaik di web.} Di browser Chrome atau Safari, pilih \textbf{``Tambah ke Layar Utama''} agar aplikasi web berjalan seperti aplikasi native dengan akses offline penuh.
+\end{tipbox}
+
+\end{document}
