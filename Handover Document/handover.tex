@@ -25,6 +25,8 @@
 \usepackage{parskip}
 \usepackage{microtype}
 \usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{calc}
 
 % ── Colour Palette ──────────────────────────────────────────
 \definecolor{budgt-blue}{HTML}{3B82F6}
@@ -39,6 +41,9 @@
 \definecolor{note-bg}{HTML}{EFF6FF}
 \definecolor{warn-bg}{HTML}{FFF7ED}
 \definecolor{caution-bg}{HTML}{FFF1F2}
+\definecolor{cover-pink}{HTML}{F9B8C5}
+\definecolor{cover-mint}{HTML}{A3D8D4}
+\definecolor{cover-lavender}{HTML}{D8C8F0}
 
 % ── Hyperref Setup ──────────────────────────────────────────
 \hypersetup{
@@ -128,30 +133,62 @@
 
 % ── Title Page ──────────────────────────────────────────────
 \begin{titlepage}
-  \pagecolor{budgt-dark}
-  \color{white}
-  \vspace*{3cm}
-  \begin{center}
-    {\fontsize{52}{60}\selectfont\bfseries\color{budgt-accent} BUDGT}\\[0.4cm]
-    {\Large\color{budgt-gray} Personal Finance Management Application}\\[0.2cm]
-    {\large\color{white} Project Handover Document}\\[2.5cm]
-    \noindent\rule{8cm}{0.4pt}\\[0.8cm]
-    {\normalsize\color{budgt-gray}
-      \textbf{Version:} 1.0.6 \quad\textbf{Version Code:} 7\\[0.3cm]
-      \textbf{Date:} August 2026\\[0.3cm]
-      \textbf{Platforms:} Android \textbullet{} iOS \textbullet{} Progressive Web App\\[0.3cm]
-      \textbf{Confidentiality:} Internal Use
-    }\\[2cm]
-    \noindent\rule{8cm}{0.4pt}\\[0.8cm]
-    {\small\color{budgt-gray}
-      This document is intended for the incoming development team or project stakeholders.\\
-      It provides a complete technical, architectural, and operational overview\\
-      of the BUDGT application as of the handover date.
-    }
-  \end{center}
-  \vfill
+\begin{tikzpicture}[remember picture, overlay]
+
+  % ── Pastel gradient background (pink top → mint bottom) ──
+  \shade[top color=cover-pink!70!white,
+         bottom color=cover-mint!80!white,
+         shading angle=0]
+    (current page.south west) rectangle (current page.north east);
+
+  % ── Top bracket  (Γ-shape: horizontal across top, drop on right) ──
+  \draw[black!55, line width=0.5pt]
+    ($(current page.north west) + (2.2cm, -1.6cm)$) --
+    ($(current page.north east) + (-1.6cm, -1.6cm)$) --
+    ($(current page.north east) + (-1.6cm, -5.5cm)$);
+
+  % ── Bottom bracket (L-shape: rise on left, horizontal across bottom) ──
+  \draw[black!55, line width=0.5pt]
+    ($(current page.south west) + (1.6cm, 5.5cm)$) --
+    ($(current page.south west) + (1.6cm, 1.6cm)$) --
+    ($(current page.south east) + (-2.2cm, 1.6cm)$);
+
+  % ── Logo box ──
+  \fill[black]
+    ($(current page.north west) + (2.2cm, -2.3cm)$) rectangle
+    ($(current page.north west) + (4.8cm, -4.5cm)$);
+  \node[white, font=\sffamily\bfseries\small, align=center] at
+    ($(current page.north west) + (3.5cm, -3.4cm)$)
+    {YOUR\\LOGO};
+
+  % ── Main title ──
+  \node[black, font=\sffamily\bfseries\fontsize{40}{48}\selectfont,
+        align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -8.5cm)$)
+    {BUDGT\\[6pt]HANDOVER\\[6pt]DOCUMENT};
+
+  % ── Prepared by label ──
+  \node[black!65, font=\sffamily\small, align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -18.8cm)$)
+    {Prepared by:};
+
+  % ── Prepared by name ──
+  \node[black, font=\sffamily\bfseries\normalsize, align=left, anchor=north west] at
+    ($(current page.north west) + (2.2cm, -19.7cm)$)
+    {{[}Outgoing Developer{]}};
+
+  % ── Contact / metadata block ──
+  \node[black!65, font=\sffamily\small, align=left, anchor=north west,
+        inner sep=0pt] at
+    ($(current page.north west) + (2.2cm, -21.3cm)$)
+    {Version 1.0.6 (versionCode~7)\\[3pt]%
+     August 2026\\[3pt]%
+     Android \textbullet{} iOS \textbullet{} PWA\\[3pt]%
+     github.com/Azukakomai/Budgt};
+
+\end{tikzpicture}
+\null
 \end{titlepage}
-\nopagecolor
 
 % ── Table of Contents ───────────────────────────────────────
 \tableofcontents
