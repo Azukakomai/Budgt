@@ -11,29 +11,51 @@ export function renderNav() {
   const nav = document.getElementById('app-nav');
   if (!nav) return;
 
-  const items = [
-    { route: '/dashboard',     icon: 'ph ph-house',              iconActive: 'ph-fill ph-house-fill',              label: 'Home' },
-    { route: '/transactions',  icon: 'ph ph-list-bullets',       iconActive: 'ph-fill ph-list-bullets-fill',       label: 'Activity' },
-    { route: '/budgets',       icon: 'ph ph-chart-pie',          iconActive: 'ph-fill ph-chart-pie-fill',          label: 'Budgets' },
-    { route: '/accounts',      icon: 'ph ph-wallet',             iconActive: 'ph-fill ph-wallet-fill',             label: 'Accounts' },
-    { route: '/more',          icon: 'ph ph-dots-three-circle',  iconActive: 'ph-fill ph-dots-three-circle-fill',  label: 'More' },
+  const currentRoute = (window.location.hash || '#/dashboard').replace('#', '');
+
+  const leftItems = [
+    { route: '/dashboard',    icon: 'ph ph-house',         label: 'Home' },
+    { route: '/transactions', icon: 'ph ph-calendar-blank', label: 'Activity' },
+  ];
+
+  const rightItems = [
+    { route: '/accounts',     icon: 'ph ph-wallet',        label: 'Accounts' },
+    { route: '/budgets',      icon: 'ph ph-chart-pie',     label: 'Budgets' },
   ];
 
   nav.className = 'bottom-nav';
-  nav.innerHTML = items.map(item => `
-    <button class="nav-item" data-route="${item.route}" aria-label="${t(item.label)}">
-      <i class="${item.icon}"></i>
-      <span>${t(item.label)}</span>
-    </button>
-  `).join('');
+  nav.innerHTML = `
+    <div class="nav-pill">
+      ${leftItems.map(item => `
+        <button class="nav-item ${currentRoute === item.route ? 'active' : ''}" data-route="${item.route}" aria-label="${t(item.label)}">
+          <i class="${item.icon}"></i>
+        </button>
+      `).join('')}
+
+      <button class="nav-fab-btn" id="nav-fab" aria-label="${t('Add transaction')}">
+        <i class="ph-bold ph-plus"></i>
+      </button>
+
+      ${rightItems.map(item => `
+        <button class="nav-item ${currentRoute === item.route ? 'active' : ''}" data-route="${item.route}" aria-label="${t(item.label)}">
+          <i class="${item.icon}"></i>
+        </button>
+      `).join('')}
+    </div>
+  `;
 
   nav.addEventListener('click', (e) => {
+    const fabBtn = e.target.closest('#nav-fab');
+    if (fabBtn) {
+      showTransactionForm();
+      return;
+    }
+
     const navItem = e.target.closest('.nav-item');
     if (!navItem) return;
     const route = navItem.dataset.route;
     Router.navigate('#' + route);
 
-    // Update active state (color change via CSS, icon stays the same)
     nav.querySelectorAll('.nav-item').forEach(ni => {
       const r = ni.dataset.route;
       if (route === r) {
@@ -50,20 +72,34 @@ export function renderHeader(title, actions = []) {
   const header = document.getElementById('app-header');
   if (!header) return;
 
+  const currentRoute = (window.location.hash || '#/dashboard').replace('#', '');
+
+  // Add borderless "More" button to top right header actions
+  const moreAction = {
+    id: 'header-more-btn',
+    icon: currentRoute === '/more' ? 'ph-fill ph-dots-three-circle-fill' : 'ph ph-dots-three-circle',
+    label: t('More'),
+    onClick: () => Router.navigate('#/more')
+  };
+
+  const allActions = [...actions];
+  if (!allActions.some(a => a.id === 'header-more-btn')) {
+    allActions.push(moreAction);
+  }
+
   header.className = 'app-header';
   header.innerHTML = `
     <h1 class="header-title">${title}</h1>
     <div class="header-actions">
-      ${actions.map(a => `
-        <button class="btn-icon btn-ghost" id="${a.id || ''}" aria-label="${a.label || ''}">
+      ${allActions.map(a => `
+        <button class="header-btn-borderless" id="${a.id || ''}" aria-label="${a.label || ''}">
           <i class="${a.icon}"></i>
         </button>
       `).join('')}
     </div>
   `;
 
-  // Attach action handlers
-  actions.forEach(a => {
+  allActions.forEach(a => {
     if (a.id && a.onClick) {
       const btn = document.getElementById(a.id);
       if (btn) btn.addEventListener('click', a.onClick);
@@ -73,21 +109,14 @@ export function renderHeader(title, actions = []) {
 
 // ─────────── FAB ───────────
 export function renderFab(onClick) {
-  const fabRoot = document.getElementById('app-fab');
-  if (!fabRoot) return;
-
-  fabRoot.innerHTML = `
-    <button class="fab" id="main-fab" aria-label="Add transaction">
-      <i class="ph-bold ph-plus"></i>
-    </button>
-  `;
-
-  document.getElementById('main-fab').addEventListener('click', onClick);
+  const fabBtn = document.getElementById('nav-fab');
+  if (fabBtn && onClick) {
+    fabBtn.onclick = onClick;
+  }
 }
 
 export function hideFab() {
-  const fabRoot = document.getElementById('app-fab');
-  if (fabRoot) fabRoot.innerHTML = '';
+  // Central Add button is permanent in navbar pill
 }
 
 // ─────────── Bottom Sheet Modal ───────────
@@ -242,6 +271,10 @@ export function showTransactionForm(existingTx = null) {
 
   const today = new Date().toISOString().split('T')[0];
 
+  // Capture the sheet's own close fn — more reliable than the module-level
+  // activeSheet variable which can be stale after synchronous re-renders.
+  let closeModal = null;
+
   const formContent = (container) => {
     container.innerHTML = `
       <div class="tabs" id="tx-type-tabs">
@@ -375,7 +408,8 @@ export function showTransactionForm(existingTx = null) {
         State.deleteTransaction(existingTx.id);
       }
       State.addTransaction(tx);
-      closeSheet();
+      // Use the directly-captured close reference; fall back to closeSheet() as safety net
+      (closeModal ?? closeSheet)();
       showToast(isEdit ? t('Transaction updated') : t('Transaction added'), 'success');
     });
 
@@ -383,14 +417,16 @@ export function showTransactionForm(existingTx = null) {
     if (isEdit) {
       container.querySelector('#tx-delete').addEventListener('click', () => {
         State.deleteTransaction(existingTx.id);
-        closeSheet();
+        (closeModal ?? closeSheet)();
         showToast(t('Transaction deleted'), 'success');
       });
     }
   };
 
-  showSheet({
+  const sheetResult = showSheet({
     title: isEdit ? t('Update Transaction') : t('Add Transaction'),
     content: formContent
   });
+  // Assign after showSheet returns — by the time the user taps a button, this is set
+  closeModal = sheetResult?.close;
 }
